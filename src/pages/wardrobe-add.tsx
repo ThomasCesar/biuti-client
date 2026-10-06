@@ -1,30 +1,13 @@
 
-import { Button } from "../ui/button";
 import { CheckCircle } from "lucide-react";
-import { UploadZone } from "../upload-zone";
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { AnalysisLoader } from "../analysis-loader";
-import { Table, TableBody, TableCell, TableRow } from "../ui/table";
 import type { ItemCategory, ItemMaterial, ItemType } from "@/types/items";
-import { createItem } from "@/lib/items";
-
-
-// const itemsImages: string[] = [
-//   "t-shirt-1.webp",
-//   "t-shirt-2.webp",
-//   "pants-1.webp",
-//   "pants-2.webp",
-//   "pants-3.webp",
-//   "jacket-1.webp",
-//   "jacket-2.webp",
-//   "shirt-1.webp",
-//   "shirt-2.webp",
-//   "shoes-1.webp",
-//   "hat-1.webp",
-// ];
-// var imageUrl = itemsImages[Math.floor(Math.random() * itemsImages.length)];
-
+import { createItem } from "@/services/items";
+import { UploadZone } from "@/components/upload-zone";
+import { AnalysisLoader } from "@/components/analysis-loader";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 type Stage = "upload" | "analyzing" | "results";
 

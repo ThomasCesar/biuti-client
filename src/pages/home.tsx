@@ -1,6 +1,6 @@
-import Logo from "../logo";
-import AppLayout from "../app-layout";
-import { Card, CardContent } from "../ui/card"
+import AppLayout from "@/components/app-layout";
+import Logo from "@/components/logo";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function HomePage() {
 

@@ -1,13 +1,13 @@
 
-import Logo from "../logo";
 import { Link } from "react-router";
-import { Button } from "../ui/button";
-import { UploadZone } from "../upload-zone";
 import { useCallback, useState } from "react";
-import { AnalysisLoader } from "../analysis-loader";
 import { analyzePhoto, SEASONS } from "@/lib/colorimetry";
 import type { AnalysisResult, Color } from "@/types/colorimetry";
 import { ArrowRight, Contrast, Dot, RotateCcw, Sun, Thermometer } from "lucide-react";
+import Logo from "@/components/logo";
+import { UploadZone } from "@/components/upload-zone";
+import { AnalysisLoader } from "@/components/analysis-loader";
+import { Button } from "@/components/ui/button";
 
 type Stage = "upload" | "analyzing" | "results";
 

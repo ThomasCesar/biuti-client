@@ -1,11 +1,12 @@
 
-import Logo from "../logo"
 import { useState } from "react"
 import { Link } from "react-router"
 import { Loader } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import Logo from "@/components/logo"
+import { defaultUser } from "@/types/main"
 
 export default function SignInPage() {
 
@@ -15,10 +16,7 @@ export default function SignInPage() {
 
   const handleSignIn = async () => {
     setIsLoading(true);
-    await login({
-      id: 1,
-      name: 'Thomas'
-    }, false)
+    await login(defaultUser, false)
   }
 
   return (

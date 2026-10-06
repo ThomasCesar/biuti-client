@@ -1,12 +1,12 @@
-import Header from "../header";
 import { Link } from "react-router";
-import { Button } from "../ui/button";
-import { getItems } from "@/lib/items";
-import AppLayout from "../app-layout";
 import { PlusIcon } from "lucide-react";
+import Header from "@/components/header";
 import type { Item } from "@/types/items";
 import { useEffect, useState } from "react";
-import ClothingItemsGrid from "../clothing-item";
+import { getItems } from "@/services/items";
+import AppLayout from "@/components/app-layout";
+import { Button } from "@/components/ui/button";
+import ClothingItemsGrid from "@/components/clothing-item";
 
 export default function WardrobePage() {
 
@@ -18,6 +18,7 @@ export default function WardrobePage() {
       setItems(items);
     }
     getAllItems();
+    return () => { }
   }, [])
 
   return (

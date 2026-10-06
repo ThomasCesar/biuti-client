@@ -1,17 +1,17 @@
-import ColorimetryPage from "@/components/pages/colorimetry";
-import HomePage from "@/components/pages/home";
-import NotFoundPage from "@/components/pages/not-found";
-import SignInPage from "@/components/pages/sign-in";
-import SignUpPage from "@/components/pages/sign-up";
-import WelcomePage from "@/components/pages/welcome";
+import ColorimetryPage from "@/pages/colorimetry";
+import HomePage from "@/pages/home";
+import NotFoundPage from "@/pages/not-found";
+import SignInPage from "@/pages/sign-in";
+import SignUpPage from "@/pages/sign-up";
+import WelcomePage from "@/pages/welcome";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { AuthProvider } from "./auth-provider";
 import { ProtectedRoute } from "./protected-route";
-import WardrobePage from "./pages/wardrobe";
-import ShoppingPage from "./pages/shopping";
-import TryonPage from "./pages/tryon";
-import AccountPage from "./pages/account";
-import WardrobeAddPage from "./pages/wardrobe-add";
+import WardrobePage from "@/pages/wardrobe";
+import WardrobeAddPage from "@/pages/wardrobe-add";
+import ShoppingPage from "@/pages/shopping";
+import TryonPage from "@/pages/tryon";
+import AccountPage from "@/pages/account";
 
 const router = createBrowserRouter([
   {

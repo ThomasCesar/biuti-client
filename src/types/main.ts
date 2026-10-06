@@ -1,4 +1,11 @@
 export type User = {
-  id: number;
+  id: string;
   name: string;
+  mail: string;
+}
+
+export const defaultUser: User = {
+  id: "cmutxu74v00008othj7vrtd1f",
+  name: "Thomas FRANCOIS",
+  mail: "thomas.francois.mail@gmail.com"
 }

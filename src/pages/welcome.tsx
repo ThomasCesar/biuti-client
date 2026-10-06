@@ -1,8 +1,8 @@
 
-import Logo from "../logo";
 import { Link } from "react-router";
-import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
 
 export default function WelcomePage() {
   return (
