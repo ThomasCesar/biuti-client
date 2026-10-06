@@ -13,7 +13,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 function SettingsCard({ children }: { children: React.ReactNode }) {
   return (
     <Card>
-      <CardContent className="flex justify-between gap-5 items-center w-full">
+      <CardContent className="flex justify-between gap-5 items-center">
         {children}
       </CardContent>
     </Card>
@@ -39,7 +39,7 @@ export default function AccountPage() {
         <div className="space-y-5 pb-5">
           {/* ------- */}
           <SettingsCard>
-            <div className="flex gap-3 w-full">
+            <div className="flex gap-3 min-w-0 ">
               <Avatar size="lg">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
@@ -47,9 +47,9 @@ export default function AccountPage() {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div className="space-y-0 min-w-0 flex-1">
-                <p className="">{user?.name}</p>
-                <p className="text-muted-foreground w-full min-w-0 text-ellipsis">{user?.mail}</p>
+              <div className="space-y-0 flex-1 overflow-hidden">
+                <p className="w-full overflow-hidden text-ellipsis text-nowrap">{user?.name}</p>
+                <p className="text-muted-foreground w-full overflow-hidden text-ellipsis text-nowrap">{user?.mail}</p>
               </div>
             </div>
             <Link to={'/'}>
