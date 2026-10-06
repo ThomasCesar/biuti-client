@@ -1,8 +1,7 @@
 import type { Item } from "@/types/items";
-import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./utils";
+import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./api";
 
 export async function getItems(): Promise<Item[]> {
-  await new Promise(resolve => setTimeout(resolve, 1000))
   return await apiGETRequest('items')
 }
 

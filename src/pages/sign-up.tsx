@@ -1,11 +1,12 @@
 
 import { useState } from "react"
 import { Link } from "react-router"
-import { Checkbox } from "../ui/checkbox"
 import { useAuth } from "@/hooks/use-auth"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Loader } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { defaultUser } from "@/types/main"
 
 export default function SignUpPage() {
 
@@ -15,10 +16,7 @@ export default function SignUpPage() {
 
   const handleSignUp = async () => {
     setIsLoading(true);
-    await login({
-      id: 1,
-      name: 'Thomas'
-    }, true)
+    await login(defaultUser, true)
   }
 
   return (

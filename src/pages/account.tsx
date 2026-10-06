@@ -1,13 +1,13 @@
-import Header from "../header";
 import { Link } from "react-router";
-import AppLayout from "../app-layout";
-import { Button } from "../ui/button";
 import React, { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { ThemeToggle } from "../theme-toggle";
-import { Card, CardContent } from "../ui/card";
 import { Loader, LogOut, SquarePen } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import Header from "@/components/header";
+import { Card, CardContent } from "@/components/ui/card";
+import AppLayout from "@/components/app-layout";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 
 function SettingsCard({ children }: { children: React.ReactNode }) {
@@ -25,7 +25,7 @@ export default function AccountPage() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -39,7 +39,7 @@ export default function AccountPage() {
         <div className="space-y-5 pb-5">
           {/* ------- */}
           <SettingsCard>
-            <div className="flex gap-3">
+            <div className="flex gap-3 min-w-0 ">
               <Avatar size="lg">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
@@ -47,9 +47,9 @@ export default function AccountPage() {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div className="space-y-0">
-                <p className="">Johnny john smith the 2nd</p>
-                <p className="text-muted-foreground">jjsmith@gmail.com</p>
+              <div className="space-y-0 flex-1 overflow-hidden">
+                <p className="w-full overflow-hidden text-ellipsis text-nowrap">{user?.name}</p>
+                <p className="text-muted-foreground w-full overflow-hidden text-ellipsis text-nowrap">{user?.mail}</p>
               </div>
             </div>
             <Link to={'/'}>

@@ -1,5 +1,5 @@
-import AppLayout from "../app-layout";
-import Header from "../header";
+import AppLayout from "@/components/app-layout";
+import Header from "@/components/header";
 
 export default function TryonPage() {
   return (
