@@ -22,7 +22,7 @@ export default function ShoppingPage() {
     <AppLayout>
       <div className="space-y-5">
         <Header text="Go shopping !" />
-        <ClothingItemsGrid items={items} />
+        <ClothingItemsGrid items={items} withPrices={true} />
       </div>
     </AppLayout>
   );
