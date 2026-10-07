@@ -9,7 +9,6 @@ import { AuthProvider } from "./auth-provider";
 import { ProtectedRoute } from "./protected-route";
 import WardrobePage from "@/pages/wardrobe";
 import WardrobeAddPage from "@/pages/wardrobe-add";
-import ShoppingPage from "@/pages/shopping";
 import TryonPage from "@/pages/tryon";
 import AccountPage from "@/pages/account";
 
@@ -55,10 +54,6 @@ const router = createBrowserRouter([
           {
             path: 'wardrobe/add',
             Component: WardrobeAddPage
-          },
-          {
-            path: 'shopping',
-            Component: ShoppingPage
           },
           {
             path: 'tryon',

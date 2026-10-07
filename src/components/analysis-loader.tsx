@@ -33,7 +33,7 @@ export function AnalysisLoader() {
           <circle
             cx="60" cy="60" r="50"
             fill="none"
-            stroke="var(--color-pink-600)"
+            stroke="var(--primary)"
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={`${2 * Math.PI * 50}`}

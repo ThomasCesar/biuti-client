@@ -1,4 +1,4 @@
-import { CircleUserRound, Home, MirrorRound, Shirt, ShoppingBag, type LucideIcon } from "lucide-react"
+import { CircleUserRound, Home, MirrorRound, Shirt, type LucideIcon } from "lucide-react"
 import { NavLink } from "react-router";
 
 type App = {
@@ -9,7 +9,6 @@ type App = {
 const apps: App[] = [
   { label: "Home", icon: Home, page: '' },
   { label: "Wardrobe", icon: Shirt, page: 'wardrobe' },
-  { label: "Shopping", icon: ShoppingBag, page: 'shopping' },
   { label: "Try on", icon: MirrorRound, page: 'tryon' },
   { label: "Account", icon: CircleUserRound, page: 'account' }
 ]

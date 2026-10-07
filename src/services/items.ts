@@ -5,7 +5,7 @@ export async function getItems(): Promise<Item[]> {
   return await apiGETRequest('items')
 }
 
-export async function createItem(newItem: Omit<Item, 'id'>): Promise<Item> {
+export async function createItem(newItem: Omit<Item, 'id' | 'createdAt'>): Promise<Item> {
   return await apiPOSTRequest<Item>('items', newItem);
 }
 

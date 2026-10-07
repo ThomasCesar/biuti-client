@@ -13,7 +13,7 @@ type Stage = "upload" | "analyzing" | "results";
 
 function SmallTitle({ text }: { text: string }) {
   return (
-    <p className="text-xs uppercase tracking-widest text-pink-500">{text}</p>
+    <p className="text-xs uppercase tracking-widest text-foreground">{text}</p>
   );
 }
 
@@ -85,7 +85,7 @@ export default function ColorimetryPage() {
             <UploadZone onFile={handleFile} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {Object.values(SEASONS).map(s => (
-                <div key={s.season} className="rounded-xl bg-secondary p-3">
+                <div key={s.season} className="rounded-xl p-5 border">
                   <s.icon className=" stroke-muted-foreground mb-2" />
                   <p className="font-semibold">{s.season}</p>
                   <p className="text-sm text-muted-foreground">{s.description_short}</p>
@@ -114,14 +114,14 @@ export default function ColorimetryPage() {
             <img
               src={photoUrl}
               alt="Your uploaded photo"
-              className="rounded-md object-cover object-top h-[40vh] shadow-xl/20 shadow-pink-500/50"
+              className="rounded-md object-cover object-top h-[40vh]"
             />
 
             {/* -- season info + characteristics*/}
             <div>
               <SmallTitle text="Your Season" />
               <div className="flex items-center gap-2">
-                <span className="mt-1 text-4xl font-bold"> {result.palette.subSeason} </span>
+                <span className="mt-1 text-4xl font-bold">{result.palette.subSeason}</span>
                 <result.palette.icon className="stroke-muted-foreground animate-spin animation-duration-[2000ms]" />
               </div>
               <p className="mt-3 text-sm text-muted-foreground">{result.palette.description}</p>
@@ -131,15 +131,15 @@ export default function ColorimetryPage() {
                   { icon: Sun, label: "Depth", value: result.lightness },
                   { icon: Contrast, label: "Contrast", value: result.contrast },
                 ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="rounded-xl bg-secondary p-3 text-center">
-                    <Icon className="mx-auto mb-2 stroke-pink-600" />
+                  <div key={label} className="rounded-xl border p-3 text-center">
+                    <Icon className="mx-auto mb-2 stroke-primary" />
                     <p className="text-xs text-muted-foreground">{label}</p>
                     <p className="mt-0.5 text-sm font-medium text-foreground">{value}</p>
                   </div>
                 ))}
               </div>
               <div className="space-y-2 mt-5">
-                {result.palette.characteristics.map(c => <p key={c} className="flex items-center text-sm text-muted-foreground"><Dot className="stroke-pink-600" />{c}</p>)}
+                {result.palette.characteristics.map(c => <p key={c} className="flex items-center text-sm text-muted-foreground"><Dot className="stroke-primary" />{c}</p>)}
               </div>
             </div>
 

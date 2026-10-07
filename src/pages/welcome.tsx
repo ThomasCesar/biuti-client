@@ -17,7 +17,7 @@ export default function WelcomePage() {
         <img
           src="/fashion-2.jpg"
           alt="Image"
-          className="rounded-md object-cover object-top h-[40vh] shadow-xl/20 shadow-pink-500/50"
+          className="rounded-md object-cover object-top h-[40vh]"
         />
         <p className="text-2xl font-light">Cupcake icing candy canes</p>
         <p className="text-muted-foreground">Pudding cupcake soufflssé chocolate bar gummi bears. Cupcake icing candy canes toffee marzipan. Tiramisu sweet roll toffee biscuit chocolate.</p>

@@ -2,7 +2,6 @@
 import { CheckCircle } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import type { ItemCategory, ItemMaterial, ItemType } from "@/types/items";
 import { createItem } from "@/services/items";
 import { UploadZone } from "@/components/upload-zone";
 import { AnalysisLoader } from "@/components/analysis-loader";
@@ -12,10 +11,10 @@ import { Button } from "@/components/ui/button";
 type Stage = "upload" | "analyzing" | "results";
 
 type ItemAnalysis = Partial<{
-  category: ItemCategory;
-  type: ItemType;
+  category: string;
+  type: string;
   color: string;
-  material: ItemMaterial;
+  material: string;
 }>;
 
 export default function WardrobeAddPage() {
@@ -60,7 +59,9 @@ export default function WardrobeAddPage() {
       image: 'shirt-1.webp',
       description: 'Un truc',
       userId: 'cmutxu74v00008othj7vrtd1f',
-      brandId: 'cmutxukxo00018othbltzmnbk'
+      brandId: 'cmutxukxo00018othbltzmnbk',
+      material: "Cotton",
+      type: 'Pants'
     })
     navigate("/wardrobe");
   }, [result, handleReset]);
@@ -96,7 +97,7 @@ export default function WardrobeAddPage() {
               <img
                 src={photoUrl}
                 alt="Your uploaded photo"
-                className="rounded-md object-cover h-[40vh] shadow-xl/20 shadow-pink-500/50"
+                className="rounded-md object-cover h-[40vh]"
               />
             )}
 

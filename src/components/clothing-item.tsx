@@ -17,7 +17,7 @@ function ClothingItem({ item, price = null }: { item: Item, price: number | null
   );
 }
 
-export default function ClothingItemsGrid({ items, withPrices = false }: { items: Item[] | null, withPrices: boolean }) {
+export default function ClothingItemsGrid({ items, withPrices = false }: { items: Item[] | null, withPrices?: boolean }) {
   return (
     <div className="grid grid-cols-3 gap-2">
       {
