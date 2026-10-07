@@ -1,9 +1,12 @@
 import type { User } from "./main";
 
 
-export type ItemMaterial = 'Cotton' | 'Wool' | 'Linen' | 'Leather' | 'Synthetic' | 'Mixed';
+export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
+export type ItemType = typeof allItemTypes[number];
 
-export type ItemType = 'Hat' | 'Jacket' | 'Shirt' | 'Pants' | 'Shoes' | 'Accessory';
+
+export const allItemMaterials = ["Cotton", "Leather", "Linen", "Mixed", "Synthetic", "Wool"] as const;
+export type ItemMaterial = typeof allItemMaterials[number];
 
 export type Item = {
   id: string,

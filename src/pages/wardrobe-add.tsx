@@ -1,140 +1,114 @@
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { UploadZone } from "@/components/upload-zone";
+import { createItem } from "@/services/items";
+import { allItemMaterials, allItemTypes, type Item, type ItemMaterial, type ItemType } from "@/types/items";
+import { defaultBrandId, defaultUser } from "@/types/main";
+import type { SelectRootChangeEventDetails } from "@base-ui/react/select";
 import { CheckCircle } from "lucide-react";
 import { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router";
-import { createItem } from "@/services/items";
-import { UploadZone } from "@/components/upload-zone";
-import { AnalysisLoader } from "@/components/analysis-loader";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
-type Stage = "upload" | "analyzing" | "results";
 
-type ItemAnalysis = Partial<{
-  category: string;
-  type: string;
-  color: string;
-  material: string;
-}>;
+function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
+  return (
+    <TableRow>
+      <TableCell className="text-muted-foreground">{title}</TableCell>
+      <TableCell className="text-right">
+        {children}
+      </TableCell>
+    </TableRow>
+  )
+}
 
-export default function WardrobeAddPage() {
+function ItemFormSelect({ placeHolder, options, onValueChange }: { placeHolder: string, options: readonly string[], onValueChange: (v: any, eventDetails: SelectRootChangeEventDetails) => void }) {
+  return (
+    <Select onValueChange={onValueChange}>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={placeHolder} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {options.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  )
+}
 
-  // --> States to manage
+export default function WardRobAddPage() {
 
-  const [stage, setStage] = useState<Stage>("upload");
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [result, setResult] = useState<null | ItemAnalysis>(null);
+  const item: Item | null = null;
 
-  let navigate = useNavigate();
-
-  // --> How to detect the item caracteristics
+  const [itemPhoto, setItemPhoto] = useState<string | null>(null);
+  const [itemName, setItemName] = useState('');
+  const [itemDescription, setItemDescription] = useState('');
+  const [itemType, setItemType] = useState<ItemType>("Accessory");
+  const [itemMaterial, setItemMaterial] = useState<ItemMaterial>("Cotton");
 
   const handleFile = useCallback(async (file: File) => {
     const url = URL.createObjectURL(file);
-    setPhotoUrl(url);
-    setStage("analyzing");
+    setItemPhoto(url);
     await new Promise(res => setTimeout(res, 3000));
-    setResult({
-      category: "Top",
-      type: "T-shirt",
-      color: "red",
-      material: "Cotton"
-    });
-    setStage("results");
   }, []);
 
-  // --> how to reset
-
-  const handleReset = useCallback(() => {
-    setPhotoUrl(null);
-    setResult(null);
-    setStage("upload");
-  }, []);
-
-  // --> how to add the item to the wardrobe
-
-  const handleSaveItem = useCallback(async () => {
+  const handleSaveItem = async () => {
     await createItem({
-      name: 'Truc',
-      image: 'shirt-1.webp',
-      description: 'Un truc',
-      userId: 'cmutxu74v00008othj7vrtd1f',
-      brandId: 'cmutxukxo00018othbltzmnbk',
-      material: "Cotton",
-      type: 'Pants'
+      name: itemName,
+      description: itemDescription,
+      image: itemPhoto ?? '',
+      material: itemMaterial,
+      type: itemType,
+      userId: defaultUser.id,
+      brandId: defaultBrandId,
     })
-    navigate("/wardrobe");
-  }, [result, handleReset]);
-
-  // --> component with stages
+  }
 
   return (
     <div className="flex flex-col justify-between h-screen p-5">
 
-      {/* TOP  */}
+      {/* TOP */}
 
       <div className="flex flex-col gap-10 justify-start flex-1 overflow-auto">
-
-        {stage !== "analyzing" && (
-          <p className="text-2xl font-light mt-5">Add items to your wardrobe</p>
-        )}
-
-        {stage === "upload" && (
-          <UploadZone onFile={handleFile} />
-        )}
-
-        {stage === "analyzing" && (
-          <div className="flex min-h-[60vh] items-center justify-center">
-            <AnalysisLoader />
-          </div>
-        )}
-
-        {stage === "results" && (
-
-          <>
-
-            {photoUrl && (
-              <img
-                src={photoUrl}
-                alt="Your uploaded photo"
-                className="rounded-md object-cover h-[40vh]"
-              />
-            )}
-
-            <Table>
-              <TableBody>
-                {Object.entries(result || {}).map(([key, value]) => (
-                  <TableRow>
-                    <TableCell key={key} className="text-muted-foreground">{key}</TableCell>
-                    <TableCell className="">{value}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-
-          </>
-
-
-        )}
+        <p className="text-2xl font-light mt-5">Add to your wardrobe</p>
+        <UploadZone onFile={handleFile} />
+        <Table>
+          <TableBody>
+            <ItemFormRow title="Title">
+              <Input placeholder="Title of item" value={itemName} onChange={e => setItemName(e.target.value)} />
+            </ItemFormRow>
+            <ItemFormRow title="Description">
+              <Textarea placeholder="Type your message here." value={itemDescription} onChange={e => setItemDescription(e.target.value)} />
+            </ItemFormRow>
+            <ItemFormRow title="Type">
+              <ItemFormSelect placeHolder="Select type" options={allItemTypes} onValueChange={setItemType} />
+            </ItemFormRow>
+            <ItemFormRow title="Material">
+              <ItemFormSelect placeHolder="Select material" options={allItemMaterials} onValueChange={setItemMaterial} />
+            </ItemFormRow>
+          </TableBody>
+        </Table>
       </div>
 
-
-      {/* BOTTOM  */}
+      {/* BOTTOM */}
 
       <div className="flex flex-col gap-3 pt-5">
-        {stage !== "analyzing" && (
-          <Link to="/wardrobe">
-            <Button className="uppercase w-full" variant={"outline"} size={"lg"}>
-              Cancel
-            </Button>
-          </Link>
-        )}
-        {stage === "results" && (
-          <Button size={"lg"} onClick={handleSaveItem} variant={"default"} className="uppercase">
-            Save Item
-            <CheckCircle />
+        <Link to="/wardrobe">
+          <Button className="uppercase w-full" variant={"outline"} size={"lg"}>
+            Cancel
           </Button>
-        )}
+        </Link>
+        <Button size={"lg"} variant={"default"} className="uppercase" onClick={handleSaveItem}>
+          Save Item
+          <CheckCircle />
+        </Button>
       </div>
 
     </div>
