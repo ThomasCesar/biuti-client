@@ -44,8 +44,12 @@ export default function SignInPage() {
       {/* BOTTOM */}
 
       <div className="flex flex-col gap-6">
-        <Button size={"lg"} disabled={isLoading} type="submit" className="uppercase" onClick={handleSignIn} >{isLoading ? <>Loading <Loader className="animate-spin" /></> : <>Sign in</>}</Button>
-        <Button size={"lg"} disabled={isLoading} variant="outline" type="button" className="uppercase"> Sign in with Google </Button>
+        <Button size={"lg"} disabled={isLoading} type="submit" className="uppercase" onClick={handleSignIn} >
+          {isLoading ? <>Loading <Loader className="animate-spin" /></> : <>Sign in</>}
+        </Button>
+        <Button size={"lg"} disabled={isLoading} variant="outline" type="button" className="uppercase">
+          Sign in with Google
+        </Button>
         <p className="text-center text-sm text-muted-foreground"> Don&apos;t have an account? <Link to={`/sign-up`}>Sign up</Link> </p>
       </div>
 

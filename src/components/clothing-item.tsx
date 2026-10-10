@@ -4,7 +4,7 @@ import { Skeleton } from "./ui/skeleton";
 function ClothingItem({ item, price = null }: { item: Item, price: number | null }) {
   return (
     <div className="border rounded-md overflow-clip flex flex-col justify-between bg-accent">
-      <img src={item.image} alt={item.name} className="w-full h-32 object-cover" />
+      <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />
       <div className="flex flex-col p-2 space-y-1 flex-1">
         <p>{item.name}</p>
         <p className="text-sm text-muted-foreground">{item.description}</p>

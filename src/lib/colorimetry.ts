@@ -209,11 +209,9 @@ function determineSeason(undertone: "Warm" | "Cool" | "Neutral", lightness: "Lig
  * Main usable method to launch colorimetry 
  * analysis
  */
-export async function analyzePhoto(file: File): Promise<AnalysisResult> {
+export async function analyzePhoto(photoUrl: string): Promise<AnalysisResult> {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    const url = URL.createObjectURL(file);
-
     img.onload = () => {
       const canvas = document.createElement("canvas");
       const maxSize = 400;
@@ -231,7 +229,7 @@ export async function analyzePhoto(file: File): Promise<AnalysisResult> {
         ? "High" : skin.r - skin.b > 25 ? "Medium" : "Low";
       const season = determineSeason(undertone, lightness);
 
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(photoUrl);
       resolve({
         dominantSkinTone: skin,
         skinHex: rgbToHex(skin.r, skin.g, skin.b),
@@ -243,6 +241,6 @@ export async function analyzePhoto(file: File): Promise<AnalysisResult> {
     };
 
     img.onerror = () => reject(new Error("Failed to load image"));
-    img.src = url;
+    img.src = photoUrl;
   });
 }

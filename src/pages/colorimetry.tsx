@@ -5,7 +5,7 @@ import { analyzePhoto, SEASONS } from "@/lib/colorimetry";
 import type { AnalysisResult, Color } from "@/types/colorimetry";
 import { ArrowRight, Contrast, Dot, RotateCcw, Sun, Thermometer } from "lucide-react";
 import Logo from "@/components/logo";
-import { UploadZone } from "@/components/upload-zone";
+import { UploadImageZone } from "@/components/upload-zone";
 import { AnalysisLoader } from "@/components/analysis-loader";
 import { Button } from "@/components/ui/button";
 
@@ -40,13 +40,12 @@ export default function ColorimetryPage() {
 
   // callback to process the file
 
-  const handleFile = useCallback(async (file: File) => {
-    const url = URL.createObjectURL(file);
-    setPhotoUrl(url);
+  const handleImageUpload = useCallback(async (imageUrl: string) => {
+    setPhotoUrl(imageUrl);
     setStage("analyzing");
     await new Promise(res => setTimeout(res, 400));
     try {
-      const analysis = await analyzePhoto(file);
+      const analysis = await analyzePhoto(imageUrl);
       await new Promise(res => setTimeout(res, 2200));
       console.log(analysis);
       setResult(analysis);
@@ -82,7 +81,7 @@ export default function ColorimetryPage() {
           <>
             <p className="text-2xl font-light">Discover your perfect palette</p>
             <p className="text-muted-foreground">Upload a photo and our colorimetry engine will determine your seasonal color type.</p>
-            <UploadZone onFile={handleFile} />
+            <UploadImageZone onImageLoad={handleImageUpload} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {Object.values(SEASONS).map(s => (
                 <div key={s.season} className="rounded-xl p-5 border">
