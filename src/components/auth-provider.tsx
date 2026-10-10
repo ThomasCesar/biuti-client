@@ -1,5 +1,5 @@
-import type { User } from "@/types/main";
 import { useMemo } from "react";
+import type { User } from "@/types/main";
 import { authContext } from "@/hooks/use-auth";
 import { useNavigate, Outlet } from "react-router";
 import { useLocalStorage } from "@/hooks/use-localstorage";

@@ -1,9 +1,14 @@
 import type { Item } from "@/types/items";
 import { Skeleton } from "./ui/skeleton";
+import { useSheet } from "./sheet-provider";
+import ItemModal from "@/modals/item";
 
 function ClothingItem({ item, price = null }: { item: Item, price: number | null }) {
+
+  const sheet = useSheet();
+
   return (
-    <div className="border rounded-md overflow-clip flex flex-col justify-between bg-accent">
+    <div className="border rounded-md overflow-clip flex flex-col justify-between bg-accent" onClick={() => sheet.openSheet(<ItemModal item={item} />)}>
       <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />
       <div className="flex flex-col p-2 space-y-1 flex-1">
         <p>{item.name}</p>
