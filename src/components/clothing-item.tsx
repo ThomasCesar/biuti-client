@@ -8,9 +8,9 @@ function ClothingItem({ item, price = null }: { item: Item, price: number | null
   const sheet = useSheet();
 
   return (
-    <div className="border rounded-md overflow-clip flex flex-col justify-between bg-accent" onClick={() => sheet.openSheet(<ItemModal item={item} />)}>
+    <div className="overflow-clip flex flex-col justify-between" onClick={() => sheet.openSheet(<ItemModal item={item} />)}>
       <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />
-      <div className="flex flex-col p-2 space-y-1 flex-1">
+      <div className="flex flex-col py-2 space-y-1 flex-1">
         <p>{item.name}</p>
         <p className="text-sm text-muted-foreground">{item.description}</p>
         <div className="flex justify-between items-center mt-auto">
