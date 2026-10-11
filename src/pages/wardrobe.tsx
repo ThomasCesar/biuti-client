@@ -14,29 +14,31 @@ export default function WardrobePage() {
 
   const [items, setItems] = useState<Item[] | null>(null);
   const [itemsTypes, setItemsTypes] = useState<ItemType[] | null>(null);
+  const [itemType, setItemType] = useState<null | string>(null);
 
   useEffect(() => {
     const getAllItems = async () => {
-
-      const items = await getItems();
-
+      console.log('Gettinh all items')
+      const items = await getItems(itemType);
       const allItemsTypes = Array.from(new Set(items.map(i => i.type)));
       setItemsTypes(allItemsTypes);
-
       items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime())
       setItems(items);
-
     }
     getAllItems();
     return () => { }
-  }, [])
+  }, [itemType])
 
   return (
     <AppLayout>
       <div className="space-y-5 pb-8">
         <Header text="Wardrobe" />
         <div className="flex gap-2 items-center flex-nowrap w-full overflow-x-scroll scrollbar-none">
-          {itemsTypes && itemsTypes.map(t => <Badge className="uppercase" key={t}>{t}</Badge>)}
+          {
+            itemsTypes ?
+              itemsTypes.map(type => <Badge className="uppercase p-3" key={type} variant={itemType == type ? "default" : "outline"} onClick={() => setItemType(type)} >{type}</Badge>) :
+              <></>
+          }
         </div>
         <ClothingItemsGrid items={items} />
         <Link to="add">

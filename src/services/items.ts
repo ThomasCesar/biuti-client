@@ -1,8 +1,8 @@
 import type { Item } from "@/types/items";
 import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./api";
 
-export async function getItems(): Promise<Item[]> {
-  return await apiGETRequest('items')
+export async function getItems(type: string | null): Promise<Item[]> {
+  return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
 }
 
 export async function createItem(newItem: Omit<Item, 'id' | 'createdAt'>): Promise<Item> {

@@ -1,7 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { Sheet, SheetClose, SheetContent, SheetFooter } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
-import Logo from "./logo";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 type sheetContextProps = {
   openSheet: (content: React.ReactNode) => void,
