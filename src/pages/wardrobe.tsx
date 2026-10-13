@@ -1,46 +1,19 @@
 import { Link } from "react-router";
 import { PlusIcon } from "lucide-react";
 import Header from "@/components/header";
-import { useEffect, useState } from "react";
-import { getItems } from "@/services/items";
-import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/components/app-layout";
 import { Button } from "@/components/ui/button";
-import type { Item, ItemType } from "@/types/items";
-import ClothingItemsGrid from "@/components/clothing-item";
-
+import { ClothingItemsList } from "@/components/clothing-item";
 
 export default function WardrobePage() {
-
-  const [items, setItems] = useState<Item[] | null>(null);
-  const [itemsTypes, setItemsTypes] = useState<ItemType[] | null>(null);
-  const [itemType, setItemType] = useState<undefined | string>(undefined);
-
-  useEffect(() => {
-    const getAllItems = async () => {
-      console.log('Gettinh all items')
-      const items = await getItems(itemType);
-      const allItemsTypes = Array.from(new Set(items.map(i => i.type)));
-      setItemsTypes(allItemsTypes);
-      items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime())
-      setItems(items);
-    }
-    getAllItems();
-    return () => { }
-  }, [itemType])
 
   return (
     <AppLayout>
       <div className="space-y-5 pb-8">
         <Header text="Wardrobe" />
         <div className="flex gap-2 items-center flex-nowrap w-full overflow-x-scroll scrollbar-none">
-          {
-            itemsTypes ?
-              itemsTypes.map(type => <Badge className="uppercase p-3" key={type} variant={itemType == type ? "default" : "outline"} onClick={() => setItemType(type)} >{type}</Badge>) :
-              <></>
-          }
         </div>
-        <ClothingItemsGrid items={items} />
+        <ClothingItemsList />
         <Link to="add">
           <Button variant={"default"} size={"lg"} className="absolute bottom-25 right-5 uppercase">
             Add

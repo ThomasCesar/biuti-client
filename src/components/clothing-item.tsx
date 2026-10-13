@@ -2,8 +2,13 @@ import type { Item } from "@/types/items";
 import { Skeleton } from "./ui/skeleton";
 import { useSheet } from "./sheet-provider";
 import ItemModal from "@/modals/item";
+import { useContext } from "react";
+import { ItemsContext } from "./items-provider";
 
-function ClothingItem({ item, price = null }: { item: Item, price: number | null }) {
+
+// ----------------------------- BASE COMPONENT
+
+function ClothingItem({ item }: { item: Item }) {
 
   const sheet = useSheet();
 
@@ -14,7 +19,7 @@ function ClothingItem({ item, price = null }: { item: Item, price: number | null
         <p>{item.name}</p>
         <p className="text-sm text-muted-foreground">{item.description}</p>
         <div className="flex justify-between items-center mt-auto">
-          <span>{price && <span className="text-xs uppercase text-primary">{price}€</span>}</span>
+          <span></span>
           <span className="text-xs text-muted-foreground uppercase">{item?.brand?.name || ''}</span>
         </div>
       </div>
@@ -22,15 +27,30 @@ function ClothingItem({ item, price = null }: { item: Item, price: number | null
   );
 }
 
-export default function ClothingItemsGrid({ items, withPrices = false }: { items: Item[] | null, withPrices?: boolean }) {
+// ----------------------------- GRID COMPONENT
+
+export default function ClothingItemsGrid({ items }: { items: Item[] }) {
   return (
     <div className="grid grid-cols-3 gap-2">
-      {
-        !items ?
-          Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />) :
-          items.map(item => <ClothingItem key={item.id} item={item} price={withPrices ? 100 : null} />)
-      }
+      {items.map(item => <ClothingItem key={item.id} item={item} />)}
     </div>
   )
 }
 
+// ----------------------------- GRID COMPONENT SKELETON
+
+function ClothingItemGridSkeleton() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
+    </div>
+  )
+}
+
+// ----------------------------- CONTEXT + LOADING + GRID
+
+export function ClothingItemsList() {
+  const context = useContext(ItemsContext);
+  if (!context || !context.loaded) return <ClothingItemGridSkeleton />
+  return <ClothingItemsGrid items={context.items} />
+}

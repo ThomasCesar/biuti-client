@@ -32,7 +32,7 @@ export function SheetProvider({ children }: SheetProviderProps) {
         open={sheetIsOpen}
         onOpenChange={setSheetIsOpen}
       >
-        <SheetContent side="bottom" className="min-h-[95vh] max-h-[95vh] rounded-t-2xl overflow-clip">
+        <SheetContent side="bottom" className="min-h-[95%] max-h-[95%] rounded-t-2xl overflow-clip">
           {sheetContent}
         </SheetContent>
       </Sheet>

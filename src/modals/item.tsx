@@ -1,8 +1,10 @@
-import Logo from "@/components/logo";
 import type { Item } from "@/types/items";
 import { Button } from "@/components/ui/button";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useContext } from "react";
+import { ItemsContext } from "@/components/items-provider";
+import { useSheet } from "@/components/sheet-provider";
 
 function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
   return (
@@ -16,6 +18,15 @@ function ItemFormRow({ title, children }: { title: string, children: React.React
 }
 
 export default function ItemModal({ item }: { item: Item }) {
+
+  const context = useContext(ItemsContext);
+  const sheet = useSheet();
+
+  const handleDeleteItem = (itemId: string) => {
+    sheet.closeSheet();
+    context?.dispatch({ action: "DELETE", id: itemId });
+  }
+
   return (
     <>
       <div className="flex-1 overflow-auto">
@@ -34,7 +45,7 @@ export default function ItemModal({ item }: { item: Item }) {
         </div>
       </div>
       <SheetFooter>
-        {/* <Button type="submit">Save changes</Button> */}
+        {context && <Button variant={"destructive"} onClick={() => handleDeleteItem(item.id)}>DELETE</Button>}
         <SheetClose render={<Button variant="outline">Close</Button>} />
       </SheetFooter>
     </>

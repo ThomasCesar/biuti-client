@@ -1,5 +1,4 @@
 import AppLayout from "@/components/app-layout";
-import ClothingItemsGrid from "@/components/clothing-item";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { SEASONS } from "@/lib/colorimetry";
@@ -40,7 +39,7 @@ export default function HomePage() {
 
           {/* ---- YOUR COLORS */}
 
-          <div className="rounded-xl relative bg-linear-to-b from-primary to-primary-foreground/80  p-0.5">
+          <div className="rounded-xl relative bg-linear-to-b from-primary to-primary-foreground/80 p-0.5">
             <div className="flex gap-5 bg-background p-8 rounded-xl">
               <img src="https://github.com/shadcn.png" className="rounded-full h-20 shadow-2xl shadow-primary" />
               <div className="space-y-3 flex-1">
@@ -58,7 +57,7 @@ export default function HomePage() {
 
           {/* ---- COLORIMETRY LINK */}
 
-          <div className="bg-linear-to-b from-primary/20 to-secondary/10 rounded-xl p-5 border border-primary/50">
+          <div className="bg-linear-to-b from-primary/20 to-secondary/10 rounded-xl p-5 border-2 border-primary/50">
             <div className="space-y-3">
               <p className="text-xl" >Find your colors !</p>
               <p className="opacity-65 text-balance"> You have not defined your preferences yet, just do it bitch. </p>
@@ -100,7 +99,6 @@ export default function HomePage() {
                 View all
               </Link>
             </div>
-            <ClothingItemsGrid items={items?.slice(0, 3) || []} />
           </div>
 
         </div>
