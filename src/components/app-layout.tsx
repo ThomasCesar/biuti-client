@@ -15,7 +15,7 @@ const apps: App[] = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col justify-between h-screen">
+    <div className="flex flex-col justify-between h-full">
 
       {/* To & content */}
 

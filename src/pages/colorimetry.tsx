@@ -67,7 +67,7 @@ export default function ColorimetryPage() {
   // render
 
   return (
-    <div className="flex flex-col justify-between h-screen p-5">
+    <div className="flex flex-col justify-between h-full p-5">
 
       {/* TOP  */}
 
@@ -82,7 +82,7 @@ export default function ColorimetryPage() {
             <p className="text-2xl font-light">Discover your perfect palette</p>
             <p className="text-muted-foreground">Upload a photo and our colorimetry engine will determine your seasonal color type.</p>
             <UploadImageZone onImageLoad={handleImageUpload} />
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 @md:grid-cols-4">
               {Object.values(SEASONS).map(s => (
                 <div key={s.season} className="rounded-xl p-5 border">
                   <s.icon className=" stroke-muted-foreground mb-2" />

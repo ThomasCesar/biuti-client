@@ -6,11 +6,10 @@ export const ProtectedRoute = () => {
   const navigate = useNavigate();
   const data = useAuth();
   useEffect(() => {
-    // console.log(data);
     if (!data?.user) {
       navigate("/sign-in");
       return;
     }
   });
-  return <Outlet />;
+  return <Outlet />
 };

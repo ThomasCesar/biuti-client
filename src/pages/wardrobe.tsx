@@ -14,7 +14,7 @@ export default function WardrobePage() {
 
   const [items, setItems] = useState<Item[] | null>(null);
   const [itemsTypes, setItemsTypes] = useState<ItemType[] | null>(null);
-  const [itemType, setItemType] = useState<null | string>(null);
+  const [itemType, setItemType] = useState<undefined | string>(undefined);
 
   useEffect(() => {
     const getAllItems = async () => {
@@ -42,7 +42,7 @@ export default function WardrobePage() {
         </div>
         <ClothingItemsGrid items={items} />
         <Link to="add">
-          <Button variant={"default"} size={"lg"} className="fixed bottom-25 right-5 uppercase">
+          <Button variant={"default"} size={"lg"} className="absolute bottom-25 right-5 uppercase">
             Add
             <PlusIcon />
           </Button>

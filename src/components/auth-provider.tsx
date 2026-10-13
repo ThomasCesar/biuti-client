@@ -3,6 +3,7 @@ import type { User } from "@/types/main";
 import { authContext } from "@/hooks/use-auth";
 import { useNavigate, Outlet } from "react-router";
 import { useLocalStorage } from "@/hooks/use-localstorage";
+import MobileLayout from "./mobile-layout";
 
 export const AuthProvider = () => {
 
@@ -25,9 +26,9 @@ export const AuthProvider = () => {
 
   return (
     <authContext.Provider value={value}>
-      <div className="container max-w-xl mx-auto">
+      <MobileLayout>
         <Outlet />
-      </div>
+      </MobileLayout>
     </authContext.Provider>
   );
 };
