@@ -1,32 +1,7 @@
 import { getItems, type Item } from "@/lib/items";
-import { createContext, useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
+import { ItemsContext, type ItemsReducerProps } from "@/contexts/items-context";
 
-
-type ItemsReducerProps = {
-  action: 'ADD' | 'LOAD',
-  items: Item[]
-} |
-{
-  action: 'DELETE',
-  id: Item["id"]
-} |
-{
-  action: 'UPDATE',
-  id: Item["id"],
-  item: Partial<Item>
-}
-
-type ItemsContextProps = {
-  loaded: boolean,
-  items: Item[],
-  dispatch: React.ActionDispatch<[payload: ItemsReducerProps]>
-}
-
-// ----------------------------- CREATING GLOBAL CONTEXT
-
-export const ItemsContext = createContext<ItemsContextProps | null>(null);
-
-// ----------------------------- REDUCER FUNCTION
 
 function itemsReducer(items: Item[], payload: ItemsReducerProps) {
   switch (payload.action) {
@@ -42,8 +17,6 @@ function itemsReducer(items: Item[], payload: ItemsReducerProps) {
       return items.filter(item => item.id !== payload.id);
   }
 }
-
-// ----------------------------- PROVIDER OF EVERYTHING
 
 export function ItemsProvider({ children }: { children: React.ReactNode }) {
 

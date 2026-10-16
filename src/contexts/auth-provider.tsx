@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { AuthContext } from "./auth-context";
 import { useNavigate, Outlet } from "react-router";
-import MobileLayout from "@/components/mobile-layout";
 import { useLocalStorage } from "@/hooks/use-localstorage";
 import type { User } from "@/lib/users";
 
@@ -23,9 +22,7 @@ export const AuthProvider = () => {
   }, [user, navigate, setUser]);
   return (
     <AuthContext.Provider value={value}>
-      <MobileLayout>
-        <Outlet />
-      </MobileLayout>
+      <Outlet />
     </AuthContext.Provider>
   );
 };

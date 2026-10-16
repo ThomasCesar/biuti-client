@@ -1,19 +1,19 @@
 import { CircleUserRound, Home, MirrorRound, Shirt, type LucideIcon } from "lucide-react"
 import { NavLink } from "react-router";
 
-type App = {
+type NavigationLink = {
   label: string,
   icon: LucideIcon,
-  page: string
+  link: string
 }
-const apps: App[] = [
-  { label: "Home", icon: Home, page: '' },
-  { label: "Wardrobe", icon: Shirt, page: 'wardrobe' },
-  { label: "Try on", icon: MirrorRound, page: 'tryon' },
-  { label: "Account", icon: CircleUserRound, page: 'account' }
+const apps: NavigationLink[] = [
+  { label: "Home", icon: Home, link: '' },
+  { label: "Wardrobe", icon: Shirt, link: 'wardrobe' },
+  { label: "Try on", icon: MirrorRound, link: 'tryon' },
+  { label: "Account", icon: CircleUserRound, link: 'account' }
 ]
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function NavigationLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col justify-between h-full">
 
@@ -30,7 +30,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {apps.map(app => (
             <NavLink
               key={app.label}
-              to={`/${app.page}`}
+              to={`/${app.link}`}
               className={({ isActive }) => isActive ? "flex-1 flex flex-col items-center gap-1" : "flex-1 flex flex-col items-center gap-1 opacity-45"}
             >
               <app.icon className="h-6 w-6 stroke-muted-foreground" />

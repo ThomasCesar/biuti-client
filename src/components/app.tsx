@@ -11,6 +11,10 @@ import WardrobeAddPage from "@/pages/wardrobe-add";
 import TryonPage from "@/pages/tryon";
 import AccountPage from "@/pages/account";
 import { AuthProvider } from "@/contexts/auth-provider";
+import MobileLayout from "./mobile-layout";
+import { SheetProvider } from "@/contexts/sheet-provider";
+import { ItemsProvider } from "@/contexts/items-provider";
+import NavigationLayout from "./navigation-layout";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +22,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
 
-      // public pages
+      // ------------- PUBLIC PAGES
 
       {
         path: "sign-in",
@@ -29,15 +33,25 @@ const router = createBrowserRouter([
         element: <SignUpPage />
       },
 
-      // protected pages
+      // ------------ PROTECTED PAGES
 
       {
         path: "/",
-        element: <ProtectedRoute />,
+        element: (
+          <ItemsProvider>
+            <SheetProvider>
+              <ProtectedRoute />
+            </SheetProvider>
+          </ItemsProvider>
+        ),
         children: [
           {
             index: true,
-            element: <HomePage />,
+            element: (
+              <NavigationLayout>
+                <HomePage />
+              </NavigationLayout>
+            )
           },
           {
             path: 'welcome',
@@ -49,7 +63,11 @@ const router = createBrowserRouter([
           },
           {
             path: 'wardrobe',
-            element: <WardrobePage />
+            element: (
+              <NavigationLayout>
+                <WardrobePage />
+              </NavigationLayout>
+            )
           },
           {
             path: 'wardrobe/add',
@@ -57,11 +75,19 @@ const router = createBrowserRouter([
           },
           {
             path: 'tryon',
-            element: <TryonPage />
+            element: (
+              <NavigationLayout>
+                <TryonPage />
+              </NavigationLayout>
+            )
           },
           {
             path: 'account',
-            element: <AccountPage />
+            element: (
+              <NavigationLayout>
+                <AccountPage />
+              </NavigationLayout>
+            )
           },
         ]
       },
@@ -70,5 +96,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />
+  return <MobileLayout><RouterProvider router={router} /></MobileLayout>
 }

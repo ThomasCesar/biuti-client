@@ -25,9 +25,11 @@ export default function SignInPage() {
       {/* TOP */}
 
       <div className="flex flex-col gap-10 pt-10">
+
         <Logo />
-        <p className="text-xl font-bold">Login to your account</p>
-        <p className="text-muted-foreground">Enter your email below to login to your account</p>
+
+        <p className="text-xl font-bold">Sign in to your account</p>
+        <p className="text-muted-foreground">Enter your email below to sign in to your account</p>
         <div>
           <p className="mb-2">Email</p>
           <Input id="email" type="email" placeholder="m@example.com" required />

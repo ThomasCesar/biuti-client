@@ -11,9 +11,9 @@ export default function WelcomePage() {
       {/* TOP */}
 
       <div className="flex flex-col gap-10 justify-start flex-1 w-full">
-        <div className="flex justify-between">
-          <Logo />
-        </div>
+
+        <Logo />
+
         <img
           src="/fashion-2.jpg"
           alt="Image"

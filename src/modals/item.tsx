@@ -2,9 +2,9 @@ import { useContext } from "react";
 import type { Item } from "@/lib/items";
 import { useSheet } from "@/hooks/use-sheet";
 import { Button } from "@/components/ui/button";
-import { ItemsContext } from "@/components/items-provider";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { ItemsContext } from "@/contexts/items-context";
 
 function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
   return (

@@ -1,17 +1,15 @@
 import { Skeleton } from "./ui/skeleton";
 import ItemModal from "@/modals/item";
 import { useContext } from "react";
-import { ItemsContext } from "./items-provider";
 import { useSheet } from "@/hooks/use-sheet";
 import type { Item } from "@/lib/items";
+import { ItemsContext } from "@/contexts/items-context";
 
 
 // ----------------------------- BASE COMPONENT
 
 function ClothingItem({ item }: { item: Item }) {
-
   const sheet = useSheet();
-
   return (
     <div className="overflow-clip flex flex-col justify-between" onClick={() => sheet.openSheet(<ItemModal item={item} />)}>
       <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />

@@ -7,6 +7,7 @@ import { ArrowLeft, Loader } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useAuth } from "@/hooks/use-auth"
 import { defaultUser } from "@/lib/users"
+import Logo from "@/components/logo"
 
 export default function SignUpPage() {
 
@@ -23,8 +24,10 @@ export default function SignUpPage() {
     <div className="flex flex-col justify-between h-full p-5">
 
       {/* TOP */}
-
       <div className="flex flex-col gap-10 pt-10">
+
+        <Logo />
+
         <Link to={'/sign-in'}>
           <Button variant={"outline"}>
             <ArrowLeft />

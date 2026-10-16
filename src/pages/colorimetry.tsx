@@ -72,9 +72,7 @@ export default function ColorimetryPage() {
 
       <div className="flex flex-col gap-10 justify-start flex-1 overflow-auto">
 
-        <div className="flex justify-between">
-          <Logo />
-        </div>
+        <Logo />
 
         {stage === "upload" && (
           <>
