@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, Outlet } from "react-router";
-import { useAuth } from "../hooks/use-auth";
-import { SheetProvider } from "./sheet-provider";
 import { ItemsProvider } from "./items-provider";
+import { SheetProvider } from "@/contexts/sheet-provider";
+import { useAuth } from "@/hooks/use-auth";
 
 export const ProtectedRoute = () => {
   const navigate = useNavigate();

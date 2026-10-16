@@ -1,12 +1,12 @@
 
 import { useState } from "react"
 import { Link } from "react-router"
-import { useAuth } from "@/hooks/use-auth"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Loader } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import { defaultUser } from "@/types/main"
+import { useAuth } from "@/hooks/use-auth"
+import { defaultUser } from "@/lib/users"
 
 export default function SignUpPage() {
 

@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
+import { defaultUser } from "@/lib/users";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { defaultBrandId } from "@/lib/brands";
+import { useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router";
+import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadImageZone } from "@/components/upload-zone";
-import { createItem } from "@/services/items";
-import { allItemMaterials, allItemTypes, type ItemMaterial, type ItemType } from "@/types/items";
-import { defaultBrandId, defaultUser } from "@/types/main";
 import type { SelectRootChangeEventDetails } from "@base-ui/react/select";
-import { CheckCircle, Loader } from "lucide-react";
-import { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { allItemMaterials, allItemTypes, createItem, type ItemMaterial, type ItemType } from "@/lib/items";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {

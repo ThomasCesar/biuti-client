@@ -1,5 +1,4 @@
-import type { Item } from "@/types/items";
-import { getItems } from "@/services/items";
+import { getItems, type Item } from "@/lib/items";
 import { createContext, useEffect, useReducer, useState } from "react";
 
 

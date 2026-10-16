@@ -1,9 +1,9 @@
-import type { Item } from "@/types/items";
 import { Skeleton } from "./ui/skeleton";
-import { useSheet } from "./sheet-provider";
 import ItemModal from "@/modals/item";
 import { useContext } from "react";
 import { ItemsContext } from "./items-provider";
+import { useSheet } from "@/hooks/use-sheet";
+import type { Item } from "@/lib/items";
 
 
 // ----------------------------- BASE COMPONENT

@@ -5,63 +5,63 @@ import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import WelcomePage from "@/pages/welcome";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { AuthProvider } from "./auth-provider";
 import { ProtectedRoute } from "./protected-route";
 import WardrobePage from "@/pages/wardrobe";
 import WardrobeAddPage from "@/pages/wardrobe-add";
 import TryonPage from "@/pages/tryon";
 import AccountPage from "@/pages/account";
+import { AuthProvider } from "@/contexts/auth-provider";
 
 const router = createBrowserRouter([
   {
-    Component: AuthProvider,
-    ErrorBoundary: NotFoundPage,
+    element: <AuthProvider />,
+    errorElement: <NotFoundPage />,
     children: [
 
       // public pages
 
       {
         path: "sign-in",
-        Component: SignInPage
+        element: <SignInPage />
       },
       {
         path: "sign-up",
-        Component: SignUpPage
+        element: <SignUpPage />
       },
 
       // protected pages
 
       {
         path: "/",
-        Component: ProtectedRoute,
+        element: <ProtectedRoute />,
         children: [
           {
             index: true,
-            Component: HomePage,
+            element: <HomePage />,
           },
           {
             path: 'welcome',
-            Component: WelcomePage
+            element: <WelcomePage />
           },
           {
             path: 'colorimetry',
-            Component: ColorimetryPage
+            element: <ColorimetryPage />
           },
           {
             path: 'wardrobe',
-            Component: WardrobePage
+            element: <WardrobePage />
           },
           {
             path: 'wardrobe/add',
-            Component: WardrobeAddPage
+            element: <WardrobeAddPage />
           },
           {
             path: 'tryon',
-            Component: TryonPage
+            element: <TryonPage />
           },
           {
             path: 'account',
-            Component: AccountPage
+            element: <AccountPage />
           },
         ]
       },

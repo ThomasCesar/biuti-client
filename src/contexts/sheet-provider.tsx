@@ -1,13 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-
-type sheetContextProps = {
-  openSheet: (content: React.ReactNode) => void,
-  closeSheet: () => void,
-}
-
-export const sheetContext = createContext<sheetContextProps | null>(null);
-
+import { SheetContext } from "./sheet-context";
 
 type SheetProviderProps = {
   children: React.ReactNode
@@ -19,7 +12,7 @@ export function SheetProvider({ children }: SheetProviderProps) {
   const [sheetContent, setSheetContent] = useState<React.ReactNode>(<></>);
 
   return (
-    <sheetContext.Provider value={{
+    <SheetContext.Provider value={{
       openSheet: (content) => {
         setSheetContent(content);
         setSheetIsOpen(true);
@@ -32,18 +25,10 @@ export function SheetProvider({ children }: SheetProviderProps) {
         open={sheetIsOpen}
         onOpenChange={setSheetIsOpen}
       >
-        <SheetContent side="bottom" className="min-h-[95%] max-h-[95%] rounded-t-2xl overflow-clip">
+        <SheetContent side="right" className="min-w-full sm:min-w-auto">
           {sheetContent}
         </SheetContent>
       </Sheet>
-    </sheetContext.Provider>
+    </SheetContext.Provider>
   );
-}
-
-export function useSheet() {
-  const sheet = useContext(sheetContext);
-  if (!sheet) {
-    throw new Error('Error');
-  }
-  return sheet;
 }

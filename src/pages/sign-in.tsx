@@ -2,11 +2,11 @@
 import { useState } from "react"
 import { Link } from "react-router"
 import { Loader } from "lucide-react"
-import { useAuth } from "@/hooks/use-auth"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Logo from "@/components/logo"
-import { defaultUser } from "@/types/main"
+import { useAuth } from "@/hooks/use-auth"
+import { defaultUser } from "@/lib/users"
 
 export default function SignInPage() {
 

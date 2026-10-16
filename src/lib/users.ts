@@ -9,5 +9,3 @@ export const defaultUser: User = {
   name: "Thomas FRANCOIS",
   mail: "thomas.francois.mail@gmail.com"
 }
-
-export const defaultBrandId = "cmutxukxo00018othbltzmnbk";

@@ -1,8 +1,7 @@
 
 import { Link } from "react-router";
 import { useCallback, useState } from "react";
-import { analyzePhoto, SEASONS } from "@/lib/colorimetry";
-import type { AnalysisResult, Color } from "@/types/colorimetry";
+import { analyzePhoto, SEASONS, type AnalysisResult, type Color } from "@/lib/colorimetry";
 import { ArrowRight, Contrast, Dot, RotateCcw, Sun, Thermometer } from "lucide-react";
 import Logo from "@/components/logo";
 import { UploadImageZone } from "@/components/upload-zone";

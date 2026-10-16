@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import React, { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
 import { Loader, LogOut, SquarePen } from "lucide-react";
 import Header from "@/components/header";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,6 +7,7 @@ import AppLayout from "@/components/app-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useAuth } from "@/hooks/use-auth";
 
 
 function SettingsCard({ children }: { children: React.ReactNode }) {
