@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, Outlet } from "react-router";
 import { useAuth } from "@/hooks/use-auth";
 
-export const ProtectedRoute = () => {
+export const ProtectedRouteLayout = () => {
   const navigate = useNavigate();
   const data = useAuth();
   useEffect(() => {

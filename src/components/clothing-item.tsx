@@ -1,9 +1,8 @@
-import { Skeleton } from "./ui/skeleton";
-import ItemModal from "@/modals/item";
-import { useContext } from "react";
-import { useSheet } from "@/hooks/use-sheet";
 import type { Item } from "@/lib/items";
-import { ItemsContext } from "@/contexts/items-context";
+import useItems from "@/hooks/use-items";
+import { Skeleton } from "./ui/skeleton";
+import { useSheet } from "@/hooks/use-sheet";
+import ItemDetailsSheet from "@/dialogs/item-sheet";
 
 
 // ----------------------------- BASE COMPONENT
@@ -11,7 +10,7 @@ import { ItemsContext } from "@/contexts/items-context";
 function ClothingItem({ item }: { item: Item }) {
   const sheet = useSheet();
   return (
-    <div className="overflow-clip flex flex-col justify-between" onClick={() => sheet.openSheet(<ItemModal item={item} />)}>
+    <div className="overflow-clip flex flex-col justify-between" onClick={() => sheet.openSheet(<ItemDetailsSheet item={item} />)}>
       <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />
       <div className="flex flex-col py-2 space-y-1 flex-1">
         <p>{item.name}</p>
@@ -48,7 +47,9 @@ function ClothingItemGridSkeleton() {
 // ----------------------------- CONTEXT + LOADING + GRID
 
 export function ClothingItemsList() {
-  const context = useContext(ItemsContext);
-  if (!context || !context.loaded) return <ClothingItemGridSkeleton />
-  return <ClothingItemsGrid items={context.items} />
+  const items = useItems();
+  if (!items.loaded) {
+    return <ClothingItemGridSkeleton />
+  }
+  return <ClothingItemsGrid items={items.items} />
 }

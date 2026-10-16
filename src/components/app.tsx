@@ -1,20 +1,19 @@
-import ColorimetryPage from "@/pages/colorimetry";
 import HomePage from "@/pages/home";
-import NotFoundPage from "@/pages/not-found";
+import TryonPage from "@/pages/tryon";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import WelcomePage from "@/pages/welcome";
-import { createBrowserRouter, RouterProvider } from "react-router";
-import { ProtectedRoute } from "./protected-route";
-import WardrobePage from "@/pages/wardrobe";
-import WardrobeAddPage from "@/pages/wardrobe-add";
-import TryonPage from "@/pages/tryon";
 import AccountPage from "@/pages/account";
+import WardrobePage from "@/pages/wardrobe";
+import NotFoundPage from "@/pages/not-found";
+import ColorimetryPage from "@/pages/colorimetry";
+import MobileLayout from "@/layouts/mobile-layout";
 import { AuthProvider } from "@/contexts/auth-provider";
-import MobileLayout from "./mobile-layout";
 import { SheetProvider } from "@/contexts/sheet-provider";
 import { ItemsProvider } from "@/contexts/items-provider";
-import NavigationLayout from "./navigation-layout";
+import NavigationLayout from "@/layouts/navigation-layout";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { ProtectedRouteLayout } from "@/layouts/protected-route-layout";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +39,7 @@ const router = createBrowserRouter([
         element: (
           <ItemsProvider>
             <SheetProvider>
-              <ProtectedRoute />
+              <ProtectedRouteLayout />
             </SheetProvider>
           </ItemsProvider>
         ),
@@ -70,10 +69,6 @@ const router = createBrowserRouter([
             )
           },
           {
-            path: 'wardrobe/add',
-            element: <WardrobeAddPage />
-          },
-          {
             path: 'tryon',
             element: (
               <NavigationLayout>
@@ -96,5 +91,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <MobileLayout><RouterProvider router={router} /></MobileLayout>
+  return (
+    <MobileLayout>
+      <RouterProvider router={router} />
+    </MobileLayout>
+  )
 }
