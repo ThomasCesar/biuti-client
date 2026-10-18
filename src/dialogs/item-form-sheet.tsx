@@ -12,10 +12,12 @@ import SheetContainer from "@/components/sheet-container";
 import { UploadImageZone } from "@/components/upload-zone";
 import type { SelectRootChangeEventDetails } from "@base-ui/react/select";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { allItemMaterials, allItemTypes, createItem, type ItemMaterial, type ItemType } from "@/lib/items";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-
+import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaultItemType, updateItem, type Item, type ItemMaterial, type ItemType } from "@/lib/items";
+/**
+ * ------------------------------------------------------------------
+ * A single row of the form
+ */
 function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
   return (
     <TableRow>
@@ -26,10 +28,13 @@ function ItemFormRow({ title, children }: { title: string, children: React.React
     </TableRow>
   )
 }
-
-function ItemFormSelect({ placeHolder, options, onValueChange }: { placeHolder: string, options: readonly string[], onValueChange: (v: any, eventDetails: SelectRootChangeEventDetails) => void }) {
+/**
+ * ------------------------------------------------------------------
+ * A select field in the form
+ */
+function ItemFormSelect({ placeHolder, value, options, onValueChange }: { placeHolder: string, value?: any, options: readonly string[], onValueChange: (v: any, eventDetails: SelectRootChangeEventDetails) => void }) {
   return (
-    <Select onValueChange={onValueChange}>
+    <Select onValueChange={onValueChange} value={value} >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={placeHolder} />
       </SelectTrigger>
@@ -45,14 +50,17 @@ function ItemFormSelect({ placeHolder, options, onValueChange }: { placeHolder: 
     </Select>
   )
 }
+/**
+ * ------------------------------------------------------------------
+ * The edit/create item form dialog
+ */
+export default function ItemFormSheet({ item }: { item?: Item }) {
 
-export default function ItemNewSheet() {
-
-  const [, setItemPhoto] = useState<string | null>(null);
-  const [itemName, setItemName] = useState('');
-  const [itemDescription, setItemDescription] = useState('');
-  const [itemType, setItemType] = useState<ItemType>("Accessory");
-  const [itemMaterial, setItemMaterial] = useState<ItemMaterial>("Cotton");
+  const [itemPhoto, setItemPhoto] = useState<string | undefined>(item ? item.image : undefined);
+  const [itemName, setItemName] = useState(item?.name || '');
+  const [itemDescription, setItemDescription] = useState(item?.description || '');
+  const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
+  const [itemMaterial, setItemMaterial] = useState<ItemMaterial>(item?.material || defaultItemMaterial);
   const [isLoading, setIsLoading] = useState(false);
 
   const items = useItems();
@@ -65,21 +73,35 @@ export default function ItemNewSheet() {
 
   const handleSaveItem = async () => {
     setIsLoading(true);
-    const newItem = await createItem({
-      name: itemName,
-      description: itemDescription,
-      image: 't-shirt-2.webp',
-      material: itemMaterial,
-      type: itemType,
-      userId: defaultUser.id,
-      brandId: defaultBrandId,
-    })
-    console.log('CREATED')
-    console.log(newItem)
-    items.dispatch({
-      action: "ADD",
-      items: [newItem]
-    })
+    if (item) {
+      const partialItem = {
+        name: itemName,
+        description: itemDescription,
+        material: itemMaterial,
+        type: itemType
+      };
+      await updateItem(item.id, partialItem);
+      items.dispatch({
+        action: "UPDATE",
+        id: item.id,
+        item: partialItem
+      })
+    }
+    else {
+      const newItem = await createItem({
+        name: itemName,
+        description: itemDescription,
+        image: 't-shirt-2.webp',
+        material: itemMaterial,
+        type: itemType,
+        userId: defaultUser.id,
+        brandId: defaultBrandId,
+      })
+      items.dispatch({
+        action: "ADD",
+        items: [newItem]
+      })
+    }
     sheet.closeSheet();
   }
 
@@ -88,7 +110,7 @@ export default function ItemNewSheet() {
       headerTitle="Add Item"
       content={
         <div className="flex flex-col gap-5 justify-start p-5">
-          <UploadImageZone onImageLoad={handleImageLoad} />
+          <UploadImageZone initialImageUrl={itemPhoto} onImageLoad={handleImageLoad} />
           <Table>
             <TableBody>
               <ItemFormRow title="Title">
@@ -98,10 +120,10 @@ export default function ItemNewSheet() {
                 <Textarea placeholder="Type your message here." value={itemDescription} onChange={e => setItemDescription(e.target.value)} />
               </ItemFormRow>
               <ItemFormRow title="Type">
-                <ItemFormSelect placeHolder="Select type" options={allItemTypes} onValueChange={setItemType} />
+                <ItemFormSelect placeHolder="Select type" value={itemType} options={allItemTypes} onValueChange={setItemType} />
               </ItemFormRow>
               <ItemFormRow title="Material">
-                <ItemFormSelect placeHolder="Select material" options={allItemMaterials} onValueChange={setItemMaterial} />
+                <ItemFormSelect placeHolder="Select material" value={itemMaterial} options={allItemMaterials} onValueChange={setItemMaterial} />
               </ItemFormRow>
             </TableBody>
           </Table>

@@ -1,3 +1,4 @@
+import EmptyState from "./empty-state";
 import type { Item } from "@/lib/items";
 import { Skeleton } from "./ui/skeleton";
 import { useSheet } from "@/hooks/use-sheet";
@@ -18,6 +19,10 @@ function ClothingItem({ item }: { item: Item }) {
 }
 
 export default function ClothingItemsGrid({ items, title }: { items: Item[], title?: boolean }) {
+
+  if (!items.length) {
+    return <EmptyState title="No item" message="You have no item in your wardrobe. Add some." />
+  }
   return (
     <>
       {title && <p className="">{items.length} clothing item(s)</p>}

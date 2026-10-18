@@ -6,7 +6,7 @@ import type { ItemType } from "@/lib/items";
 import { useSheet } from "@/hooks/use-sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import ItemNewSheet from "@/dialogs/item-new-sheet";
+import ItemFormSheet from "@/dialogs/item-form-sheet";
 import ClothingItemsGrid, { ClothingItemGridSkeleton } from "@/components/clothing-item";
 
 export default function WardrobePage() {
@@ -34,7 +34,7 @@ export default function WardrobePage() {
         variant={"default"}
         size={"lg"}
         className="absolute bottom-25 right-5 uppercase"
-        onClick={() => sheet.openSheet(<ItemNewSheet />)}
+        onClick={() => sheet.openSheet(<ItemFormSheet />)}
       >
         Add
         <PlusIcon />

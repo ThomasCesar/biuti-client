@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import { ImageIcon } from "lucide-react";
+
 interface UploadZoneProps {
+  initialImageUrl?: string;
   onImageLoad: (url: string) => void;
 }
 
-export function UploadImageZone({ onImageLoad }: UploadZoneProps) {
+export function UploadImageZone({ initialImageUrl, onImageLoad }: UploadZoneProps) {
 
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl || null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,7 +33,7 @@ export function UploadImageZone({ onImageLoad }: UploadZoneProps) {
             <img
               src={imageUrl}
               alt="Your uploaded photo"
-              className="rounded-md w-full object-cover object-top max-h-[30vh]"
+              className="rounded-md w-full object-contain object-top max-h-[30vh]"
             />
           ) :
           (

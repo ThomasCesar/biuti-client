@@ -1,5 +1,6 @@
 import type { User } from "./users";
-import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./api";
+import type { Brand } from "./brands";
+import { apiDELETERequest, apiGETRequest, apiPOSTRequest, apiPUTRequest } from "./api";
 
 export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
 export type ItemType = typeof allItemTypes[number];
@@ -21,25 +22,24 @@ export type Item = {
   createdAt: string
 }
 
-export type Brand = {
-  id: number,
-  name: string,
-  description: string,
-  logo?: string,
-  website?: string,
-  createdAt: string
-}
+export const defaultItemType: ItemType = "Shirt";
 
-export async function getItems(type?: string): Promise<Item[]> {
-  await new Promise(resolve => setTimeout(resolve, 3000));
-  return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
-}
+export const defaultItemMaterial: ItemMaterial = "Cotton";
 
 export async function createItem(newItem: Omit<Item, 'id' | 'createdAt'>): Promise<Item> {
   return await apiPOSTRequest<Item>('items', newItem);
 }
 
+export async function getItems(type?: string): Promise<Item[]> {
+  await new Promise(resolve => setTimeout(resolve, 800));
+  return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
+}
+
+export async function updateItem(itemId: Item["id"], partialItem: Partial<Omit<Item, 'id'>>): Promise<Item> {
+  return await apiPUTRequest<Item>(`items/${itemId}`, partialItem);
+}
+
 export async function deleteItem(itemId: string): Promise<boolean> {
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  await new Promise(resolve => setTimeout(resolve, 800));
   return await apiDELETERequest(`items/${itemId}`);
 }
