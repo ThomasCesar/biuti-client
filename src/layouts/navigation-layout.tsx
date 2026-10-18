@@ -9,7 +9,7 @@ type NavigationLink = {
 const apps: NavigationLink[] = [
   { label: "Home", icon: Home, link: '' },
   { label: "Wardrobe", icon: Shirt, link: 'wardrobe' },
-  { label: "Try on", icon: MirrorRound, link: 'tryon' },
+  { label: "Outfits", icon: MirrorRound, link: 'outfits' },
   { label: "Account", icon: CircleUserRound, link: 'account' }
 ]
 

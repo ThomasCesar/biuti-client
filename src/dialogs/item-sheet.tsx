@@ -46,7 +46,7 @@ export default function ItemDetailsSheet({ item }: { item: Item }) {
       content={
         <>
           <img className="w-full h-[40vh] object-cover -z-10 relative" src={item.image} />
-          <div className="p-5 bg-popover z-10 -mt-5 relative rounded-t-4xl">
+          <div className="p-5 bg-popover z-10 -mt-6 relative rounded-t-4xl">
             <div className="flex justify-between items-center mb-5">
               <p className="text-2xl ">{item.name}</p>
               <Button variant={"outline"} onClick={() => sheet.openSheet(<ItemFormSheet item={item} />)}>EDIT ITEM<Edit /></Button>

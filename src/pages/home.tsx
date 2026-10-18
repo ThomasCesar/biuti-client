@@ -60,7 +60,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ---- LINK TO TRYON */}
+        {/* ---- LINK TO Outfits */}
 
         <p className="" >Make your outfits !</p>
         <div className="rounded-xl p-5 border border-secondary bg-radial from-secondary/20 to-primary/10">

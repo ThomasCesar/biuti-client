@@ -1,5 +1,4 @@
 import HomePage from "@/pages/home";
-import TryonPage from "@/pages/tryon";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import WelcomePage from "@/pages/welcome";
@@ -14,6 +13,7 @@ import { ItemsProvider } from "@/contexts/items-provider";
 import NavigationLayout from "@/layouts/navigation-layout";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ProtectedRouteLayout } from "@/layouts/protected-route-layout";
+import OutfitsPage from "@/pages/outfits";
 
 const router = createBrowserRouter([
   {
@@ -69,10 +69,10 @@ const router = createBrowserRouter([
             )
           },
           {
-            path: 'tryon',
+            path: 'outfits',
             element: (
               <NavigationLayout>
-                <TryonPage />
+                <OutfitsPage />
               </NavigationLayout>
             )
           },
