@@ -1,7 +1,9 @@
-import type { Item } from "@/lib/items";
+import { useState } from "react";
 import useItems from "@/hooks/use-items";
 import { useSheet } from "@/hooks/use-sheet";
+import { Loader, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { deleteItem, type Item } from "@/lib/items";
 import SheetContainer from "@/components/sheet-container";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
@@ -18,12 +20,16 @@ function ItemFormRow({ title, children }: { title: string, children: React.React
 
 export default function ItemDetailsSheet({ item }: { item: Item }) {
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const items = useItems();
   const sheet = useSheet();
 
-  const handleDeleteItem = (itemId: string) => {
+  const handleDeleteItem = async () => {
+    setIsLoading(true);
+    await deleteItem(item.id);
+    items.dispatch({ action: "DELETE", id: item.id });
     sheet.closeSheet();
-    items.dispatch({ action: "DELETE", id: itemId });
   }
 
   return (
@@ -45,7 +51,16 @@ export default function ItemDetailsSheet({ item }: { item: Item }) {
           </div>
         </>
       }
-      footerButton={<Button variant={"destructive"} onClick={() => handleDeleteItem(item.id)}>DELETE</Button>}
+      footerButton={
+        <Button
+          variant={"destructive"}
+          onClick={handleDeleteItem}
+          disabled={isLoading}
+        >
+          {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>DELETE ITEM<Trash /></>}
+
+        </Button>
+      }
     />
   )
 

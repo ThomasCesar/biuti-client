@@ -1,11 +1,8 @@
 import type { Item } from "@/lib/items";
-import useItems from "@/hooks/use-items";
 import { Skeleton } from "./ui/skeleton";
 import { useSheet } from "@/hooks/use-sheet";
 import ItemDetailsSheet from "@/dialogs/item-sheet";
 
-
-// ----------------------------- BASE COMPONENT
 
 function ClothingItem({ item }: { item: Item }) {
   const sheet = useSheet();
@@ -14,42 +11,27 @@ function ClothingItem({ item }: { item: Item }) {
       <img src={item.image.length ? item.image : undefined} alt={item.name} className="w-full h-32 object-cover" />
       <div className="flex flex-col py-2 space-y-1 flex-1">
         <p>{item.name}</p>
-        <p className="text-sm text-muted-foreground">{item.description}</p>
-        <div className="flex justify-between items-center mt-auto">
-          <span></span>
-          <span className="text-xs text-muted-foreground uppercase">{item?.brand?.name || ''}</span>
-        </div>
+        <p className="text-sm text-muted-foreground">{item?.brand?.name || ''}</p>
       </div>
     </div>
   );
 }
 
-// ----------------------------- GRID COMPONENT
-
-export default function ClothingItemsGrid({ items }: { items: Item[] }) {
+export default function ClothingItemsGrid({ items, title }: { items: Item[], title?: boolean }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
-      {items.map(item => <ClothingItem key={item.id} item={item} />)}
-    </div>
+    <>
+      {title && <p className="">{items.length} clothing item(s)</p>}
+      <div className="grid grid-cols-3 gap-2">
+        {items.map(item => <ClothingItem key={item.id} item={item} />)}
+      </div>
+    </>
   )
 }
 
-// ----------------------------- GRID COMPONENT SKELETON
-
-function ClothingItemGridSkeleton() {
+export function ClothingItemGridSkeleton() {
   return (
     <div className="grid grid-cols-3 gap-2">
       {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
     </div>
   )
-}
-
-// ----------------------------- CONTEXT + LOADING + GRID
-
-export function ClothingItemsList() {
-  const items = useItems();
-  if (!items.loaded) {
-    return <ClothingItemGridSkeleton />
-  }
-  return <ClothingItemsGrid items={items.items} />
 }

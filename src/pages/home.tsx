@@ -1,24 +1,14 @@
-import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { SEASONS } from "@/lib/colorimetry";
-import { getItems, type Item } from "@/lib/items";
-import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import Logo from "@/components/logo";
+import useItems from "@/hooks/use-items";
+import { ArrowRight } from "lucide-react";
+import { SEASONS } from "@/lib/colorimetry";
+import { Button } from "@/components/ui/button";
+import ClothingItemsGrid from "@/components/clothing-item";
 
 export default function HomePage() {
 
-  const [, setItems] = useState<Item[] | null>(null);
-
-  useEffect(() => {
-    const getAllItems = async () => {
-      const items = await getItems();
-      items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime())
-      setItems(items);
-    }
-    getAllItems();
-    return () => { }
-  }, [])
+  const items = useItems();
 
   return (
 
@@ -55,9 +45,9 @@ export default function HomePage() {
 
         {/* ---- COLORIMETRY LINK */}
 
+        <p className="">Find your colors !</p>
         <div className="bg-radial from-primary/30 to-secondary/10 rounded-xl p-5 border-2 border-primary/50 ">
           <div className="space-y-3">
-            <p className="text-xl" >Find your colors !</p>
             <p className="opacity-65 text-balance"> You have not defined your preferences yet, just do it bitch. </p>
             <div className="text-right">
               <Link to={`/colorimetry`}>
@@ -72,9 +62,9 @@ export default function HomePage() {
 
         {/* ---- LINK TO TRYON */}
 
+        <p className="" >Make your outfits !</p>
         <div className="rounded-xl p-5 border border-secondary bg-radial from-secondary/20 to-primary/10">
           <div className="space-y-3 ">
-            <p className="text-xl " >Make your outfits !</p>
             <p className="text-balance opacity-65"> Customize and try on your favourite outfits ! </p>
             <div className="text-right">
               <Link to={`/colorimetry`}>
@@ -89,15 +79,16 @@ export default function HomePage() {
 
         {/* ---- LINK TO WARDROBE */}
 
-        <div className="space-y-3 w-full">
-          <div className="flex justify-between items-center">
-            <p className="text-xl"><b className="text-primary">15</b> items in your wardrobe</p>
-            <Link to={`/wardrobe`} className="text-primary" >
-              View all
-            </Link>
-          </div>
+        <div className="flex justify-between items-center">
+          <p className="">Last items</p>
+          <Link to={`/wardrobe`} className="" >
+            <Button size={"sm"} variant={"link"}>
+              go to wardrobe
+              <ArrowRight />
+            </Button>
+          </Link>
         </div>
-
+        <ClothingItemsGrid items={items.items.slice(0, 3)} />
       </div>
     </div>
 

@@ -1,5 +1,5 @@
-import { CircleUserRound, Home, MirrorRound, Shirt, type LucideIcon } from "lucide-react"
 import { NavLink } from "react-router";
+import { CircleUserRound, Home, MirrorRound, Shirt, type LucideIcon } from "lucide-react"
 
 type NavigationLink = {
   label: string,
@@ -33,8 +33,12 @@ export default function NavigationLayout({ children }: { children: React.ReactNo
               to={`/${app.link}`}
               className={({ isActive }) => isActive ? "flex-1 flex flex-col items-center gap-1" : "flex-1 flex flex-col items-center gap-1 opacity-45"}
             >
-              <app.icon className="h-6 w-6 stroke-muted-foreground" />
-              <p className="text-xs">{app.label}</p>
+              {({ isActive }) => (
+                <>
+                  <app.icon className={isActive ? "h-6 w-6 stroke-primary-foreground" : "h-6 w-6 stroke-muted-foreground"} />
+                  <p className="text-xs">{app.label}</p>
+                </>
+              )}
             </NavLink>
           ))}
         </div>

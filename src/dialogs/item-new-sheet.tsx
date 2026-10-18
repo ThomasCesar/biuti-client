@@ -1,19 +1,19 @@
 
+import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
 import { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { defaultBrandId } from "@/lib/brands";
+import { useSheet } from "@/hooks/use-sheet";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import SheetContainer from "@/components/sheet-container";
 import { UploadImageZone } from "@/components/upload-zone";
 import type { SelectRootChangeEventDetails } from "@base-ui/react/select";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { allItemMaterials, allItemTypes, createItem, type ItemMaterial, type ItemType } from "@/lib/items";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { allItemMaterials, allItemTypes, createItem, type Item, type ItemMaterial, type ItemType } from "@/lib/items";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, Loader } from "lucide-react";
-import useItems from "@/hooks/use-items";
-import { useSheet } from "@/hooks/use-sheet";
 
 
 function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
@@ -53,7 +53,7 @@ export default function ItemNewSheet() {
   const [itemDescription, setItemDescription] = useState('');
   const [itemType, setItemType] = useState<ItemType>("Accessory");
   const [itemMaterial, setItemMaterial] = useState<ItemMaterial>("Cotton");
-  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const items = useItems();
   const sheet = useSheet();
@@ -64,7 +64,7 @@ export default function ItemNewSheet() {
   }, []);
 
   const handleSaveItem = async () => {
-    setIsSaving(true);
+    setIsLoading(true);
     const newItem = await createItem({
       name: itemName,
       description: itemDescription,
@@ -74,6 +74,8 @@ export default function ItemNewSheet() {
       userId: defaultUser.id,
       brandId: defaultBrandId,
     })
+    console.log('CREATED')
+    console.log(newItem)
     items.dispatch({
       action: "ADD",
       items: [newItem]
@@ -109,9 +111,9 @@ export default function ItemNewSheet() {
         <Button
           variant={"default"}
           onClick={handleSaveItem}
-          disabled={isSaving}
+          disabled={isLoading}
         >
-          {isSaving ? <>Loading <Loader className="animate-spin" /></> : <>Save item<CheckCircle /></>}
+          {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>SAVE ITEM<CheckCircle /></>}
 
         </Button>
       }

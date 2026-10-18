@@ -1,5 +1,5 @@
-import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./api";
 import type { User } from "./users";
+import { apiDELETERequest, apiGETRequest, apiPOSTRequest } from "./api";
 
 export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
 export type ItemType = typeof allItemTypes[number];
@@ -14,9 +14,9 @@ export type Item = {
   description: string,
   material: ItemMaterial,
   type: ItemType,
-  user?: User
+  user?: User,
   userId?: string,
-  brand?: Brand
+  brand?: Brand,
   brandId?: string,
   createdAt: string
 }
