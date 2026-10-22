@@ -3,7 +3,7 @@ import { Dialog as SheetPrimitive } from "@base-ui/react/dialog"
 import { cn } from "cn"
 
 import { Button } from "@/components/ui/button"
-import { XIcon } from "lucide-react"
+import { ChevronLeft, XIcon } from "lucide-react"
 
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
@@ -78,13 +78,31 @@ function SheetContent({
   )
 }
 
+function SheetContentBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      className={cn("flex-1 overflow-auto relative", className)}
+      {...props}
+    />
+  )
+}
+
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn("flex flex-col gap-1.5 p-6", className)}
+      className={cn("flex flex-row items-center gap-2 p-6", className)}
       {...props}
     />
+  )
+}
+
+function SheetHeaderWithClose({ title }: { title: string }) {
+  return (
+    <SheetHeader>
+      <SheetClose render={<Button variant={"outline"} size={"icon-lg"}> <ChevronLeft /> </Button>} />
+      <span className="text-2xl">{title}</span>
+    </SheetHeader>
   )
 }
 
@@ -95,6 +113,15 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("mt-auto flex flex-col gap-2 p-6", className)}
       {...props}
     />
+  )
+}
+
+function SheetFooterWithClose({ closeText, children }: { closeText?: string, children?: React.ReactNode }) {
+  return (
+    <SheetFooter>
+      {children}
+      <SheetClose render={<Button variant="outline">{closeText || `CLOSE`}</Button>} />
+    </SheetFooter>
   )
 }
 
@@ -129,8 +156,11 @@ export {
   SheetTrigger,
   SheetClose,
   SheetContent,
+  SheetContentBody,
   SheetHeader,
+  SheetHeaderWithClose,
   SheetFooter,
+  SheetFooterWithClose,
   SheetTitle,
   SheetDescription,
 }

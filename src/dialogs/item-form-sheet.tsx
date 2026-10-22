@@ -1,59 +1,20 @@
 
 import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
+import { useSheet } from "@/hooks/use-sheet";
 import { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { defaultBrandId } from "@/lib/brands";
-import { useSheet } from "@/hooks/use-sheet";
+import FieldRow from "@/components/field-row";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import SheetContainer from "@/components/sheet-container";
+import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
-import type { SelectRootChangeEventDetails } from "@base-ui/react/select";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SelectFieldRow from "@/components/select-field-row";
+import { SheetContentBody, SheetFooterWithClose, SheetHeaderWithClose } from "@/components/ui/sheet";
 import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaultItemType, updateItem, type Item, type ItemMaterial, type ItemType } from "@/lib/items";
-/**
- * ------------------------------------------------------------------
- * A single row of the form
- */
-function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
-  return (
-    <TableRow>
-      <TableCell className="text-muted-foreground">{title}</TableCell>
-      <TableCell className="text-right">
-        {children}
-      </TableCell>
-    </TableRow>
-  )
-}
-/**
- * ------------------------------------------------------------------
- * A select field in the form
- */
-function ItemFormSelect({ placeHolder, value, options, onValueChange }: { placeHolder: string, value?: any, options: readonly string[], onValueChange: (v: any, eventDetails: SelectRootChangeEventDetails) => void }) {
-  return (
-    <Select onValueChange={onValueChange} value={value} >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={placeHolder} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  )
-}
-/**
- * ------------------------------------------------------------------
- * The edit/create item form dialog
- */
+
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
   const [itemPhoto, setItemPhoto] = useState<string | undefined>(item ? item.image : undefined);
@@ -106,39 +67,38 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
   }
 
   return (
-    <SheetContainer
-      headerTitle="Add Item"
-      content={
-        <div className="flex flex-col gap-5 justify-start p-5">
+    <>
+      <SheetHeaderWithClose title={item ? `Edit item` : `Add item`} />
+      <SheetContentBody>
+        <div className="flex flex-col gap-5 justify-start px-6">
           <UploadImageZone initialImageUrl={itemPhoto} onImageLoad={handleImageLoad} />
           <Table>
             <TableBody>
-              <ItemFormRow title="Title">
+              <FieldRow title="Title">
                 <Input placeholder="Title of item" value={itemName} onChange={e => setItemName(e.target.value)} />
-              </ItemFormRow>
-              <ItemFormRow title="Description">
+              </FieldRow>
+              <FieldRow title="Description">
                 <Textarea placeholder="Type your message here." value={itemDescription} onChange={e => setItemDescription(e.target.value)} />
-              </ItemFormRow>
-              <ItemFormRow title="Type">
-                <ItemFormSelect placeHolder="Select type" value={itemType} options={allItemTypes} onValueChange={setItemType} />
-              </ItemFormRow>
-              <ItemFormRow title="Material">
-                <ItemFormSelect placeHolder="Select material" value={itemMaterial} options={allItemMaterials} onValueChange={setItemMaterial} />
-              </ItemFormRow>
+              </FieldRow>
+              <FieldRow title="Type">
+                <SelectFieldRow placeHolder="Select type" value={itemType} options={allItemTypes} onValueChange={setItemType} />
+              </FieldRow>
+              <FieldRow title="Material">
+                <SelectFieldRow placeHolder="Select material" value={itemMaterial} options={allItemMaterials} onValueChange={setItemMaterial} />
+              </FieldRow>
             </TableBody>
           </Table>
         </div>
-      }
-      footerButton={
+      </SheetContentBody>
+      <SheetFooterWithClose closeText="CANCEL">
         <Button
           variant={"default"}
           onClick={handleSaveItem}
           disabled={isLoading}
         >
           {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>SAVE ITEM<CheckCircle /></>}
-
         </Button>
-      }
-    />
+      </SheetFooterWithClose>
+    </>
   )
 }

@@ -5,15 +5,15 @@ import ItemFormSheet from "./item-form-sheet";
 import { Badge } from "@/components/ui/badge";
 import BrandLogo from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
-import { Edit, Loader, Trash } from "lucide-react";
 import { deleteItem, type Item } from "@/lib/items";
-import SheetContainer from "@/components/sheet-container";
+import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
 /**
  * ------------------------------------------------------------------
  * A single row of the table
  */
-function ItemFormRow({ title, children }: { title: string, children: React.ReactNode }) {
+function FieldRow({ title, children }: { title: string, children: React.ReactNode }) {
   return (
     <TableRow>
       <TableCell className="text-muted-foreground">{title}</TableCell>
@@ -42,39 +42,42 @@ export default function ItemDetailsSheet({ item }: { item: Item }) {
   }
 
   return (
-    <SheetContainer
-      content={
-        <>
-          <img className="w-full h-[40vh] object-cover -z-10 relative" src={item.image} />
-          <div className="p-5 bg-popover z-10 -mt-6 relative rounded-t-4xl">
-            <div className="flex justify-between items-center mb-5">
-              <p className="text-2xl ">{item.name}</p>
-              <Button variant={"outline"} onClick={() => sheet.openSheet(<ItemFormSheet item={item} />)}>EDIT ITEM<Edit /></Button>
-            </div>
-            <Table>
-              <TableBody>
-                <ItemFormRow title="Type"> {item.type} </ItemFormRow>
-                <ItemFormRow title="Material"><Badge variant={"outline"}>{item.material}</Badge></ItemFormRow>
-                <ItemFormRow title="Description"><p className="text-wrap">{item.description}</p></ItemFormRow>
-                {item.brand && <ItemFormRow title="Brand"><BrandLogo brand={item.brand} /></ItemFormRow>}
-                <ItemFormRow title="Created"> {new Date(item.createdAt).toLocaleDateString()} </ItemFormRow>
-              </TableBody>
-            </Table>
+    <>
+      <SheetContentBody>
+        <SheetClose
+          render={
+            <Button className="absolute top-3 left-3 bg-black z-10" variant={"outline"} size={"icon-lg"}>
+              <ChevronLeft />
+            </Button>
+          }
+        />
+        <img className="w-full h-[40vh] object-cover -z-10 relative" src={item.image} />
+        <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl">
+          <div className="flex justify-between items-center mb-5">
+            <p className="text-2xl ">{item.name}</p>
+            <Button className="z-10" variant={"outline"} onClick={() => sheet.openSheet(<ItemFormSheet item={item} />)}>EDIT ITEM<Edit /></Button>
           </div>
-        </>
-      }
-      footerButton={
-        <>
-          <Button
-            variant={"destructive"}
-            onClick={handleDeleteItem}
-            disabled={isLoading}
-          >
-            {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>DELETE ITEM<Trash /></>}
-          </Button>
-        </>
-      }
-    />
+          <Table>
+            <TableBody>
+              <FieldRow title="Type"> {item.type} </FieldRow>
+              <FieldRow title="Material"><Badge variant={"outline"}>{item.material}</Badge></FieldRow>
+              <FieldRow title="Description"><p className="text-wrap">{item.description}</p></FieldRow>
+              {item.brand && <FieldRow title="Brand"><BrandLogo brand={item.brand} /></FieldRow>}
+              <FieldRow title="Created"> {new Date(item.createdAt).toLocaleDateString()} </FieldRow>
+            </TableBody>
+          </Table>
+        </div>
+      </SheetContentBody>
+      <SheetFooterWithClose>
+        <Button
+          variant={"destructive"}
+          onClick={handleDeleteItem}
+          disabled={isLoading}
+        >
+          {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>DELETE ITEM<Trash /></>}
+        </Button>
+      </SheetFooterWithClose>
+    </>
   )
 
 }

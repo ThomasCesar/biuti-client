@@ -1,6 +1,6 @@
 import type { Item } from "./items";
 
-const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
+export const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
 export type OutfitCategory = typeof allOutfitCategories[number];
 
 export type Outfit = {
@@ -12,6 +12,18 @@ export type Outfit = {
   items: Item[]
 }
 
+const randomItem: Item = {
+  id: "cmvdqqzwq000afotheduipahn",
+  name: "Hat",
+  image: "hat-1.webp",
+  description: "A very nice Hat",
+  material: "Synthetic",
+  type: "Hat",
+  userId: "cmutxu74v00008othj7vrtd1g",
+  brandId: "cmutxukxo00018othbltzmnbk",
+  createdAt: "2026-10-18T11:27:32.426Z"
+}
+
 export const outfits: Outfit[] = [
   {
     id: "a",
@@ -19,7 +31,7 @@ export const outfits: Outfit[] = [
     image: "outfit-1.jpg",
     description: "",
     category: "Business Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "b",
@@ -27,7 +39,7 @@ export const outfits: Outfit[] = [
     image: "outfit-2.jpg",
     description: "",
     category: "Business Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "c",
@@ -35,7 +47,7 @@ export const outfits: Outfit[] = [
     image: "outfit-3.jpg",
     description: "",
     category: "Business Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "d",
@@ -43,7 +55,7 @@ export const outfits: Outfit[] = [
     image: "outfit-4.jpg",
     description: "",
     category: "Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "e",
@@ -51,7 +63,7 @@ export const outfits: Outfit[] = [
     image: "outfit-5.jpg",
     description: "",
     category: "Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "f",
@@ -59,7 +71,7 @@ export const outfits: Outfit[] = [
     image: "outfit-6.jpg",
     description: "",
     category: "Casual",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "g",
@@ -67,7 +79,7 @@ export const outfits: Outfit[] = [
     image: "outfit-7.jpg",
     description: "",
     category: "Business",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "h",
@@ -75,7 +87,7 @@ export const outfits: Outfit[] = [
     image: "outfit-8.jpg",
     description: "",
     category: "Business",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "i",
@@ -83,7 +95,7 @@ export const outfits: Outfit[] = [
     image: "outfit-9.jpg",
     description: "",
     category: "Business",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "j",
@@ -91,7 +103,7 @@ export const outfits: Outfit[] = [
     image: "outfit-10.jpg",
     description: "",
     category: "Other",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
   {
     id: "k",
@@ -99,6 +111,6 @@ export const outfits: Outfit[] = [
     image: "outfit-11.jpg",
     description: "",
     category: "Other",
-    items: []
+    items: [randomItem, randomItem, randomItem]
   },
 ];

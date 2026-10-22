@@ -1,14 +1,10 @@
 import { Link } from "react-router";
 import Logo from "@/components/logo";
-import useItems from "@/hooks/use-items";
 import { ArrowRight } from "lucide-react";
 import { SEASONS } from "@/lib/colorimetry";
 import { Button } from "@/components/ui/button";
-import ClothingItemsGrid from "@/components/clothing-item";
 
 export default function HomePage() {
-
-  const items = useItems();
 
   return (
 
@@ -77,18 +73,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ---- LINK TO WARDROBE */}
-
-        <div className="flex justify-between items-center">
-          <p className="">Last items</p>
-          <Link to={`/wardrobe`} className="" >
-            <Button size={"sm"} variant={"link"}>
-              go to wardrobe
-              <ArrowRight />
-            </Button>
-          </Link>
-        </div>
-        <ClothingItemsGrid items={items.items.slice(0, 3)} />
       </div>
     </div>
 
