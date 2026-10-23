@@ -2,8 +2,11 @@ import { PlusIcon } from "lucide-react";
 import Header from "@/components/header";
 import { useSheet } from "@/hooks/use-sheet";
 import { Button } from "@/components/ui/button";
-import { outfits, type Outfit } from "@/lib/outfits";
+import { getOutfits, type Outfit, type OutfitCategory } from "@/lib/outfits";
 import OutfitFormSheet from "@/dialogs/outfit-form-sheet";
+import { useEffect, useState } from "react";
+import EmptyState from "@/components/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function OutfitCard({ outfit }: { outfit: Outfit }) {
   return (
@@ -36,18 +39,39 @@ function OutfitCategoryRow({ categoryTitle, outfits }: { categoryTitle: string, 
   )
 }
 
-
 export default function OutfitsPage() {
 
+  const [loading, setLoading] = useState<boolean>(true);
+  const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [outfitCategories, setOutfitCategories] = useState<OutfitCategory[]>([]);
+
   const sheet = useSheet();
+
+  useEffect(() => {
+    const fetchOutfits = async () => {
+      const outfits = await getOutfits();
+      setOutfits(outfits);
+      setOutfitCategories(Array.from(new Set(outfits.map(o => o.category))));
+      setLoading(false);
+    }
+    fetchOutfits();
+  }, [])
+
 
   return (
     <div className="space-y-8 pb-8">
       <Header text="Your outfits !" />
-      <OutfitCategoryRow categoryTitle="Casual" outfits={outfits.filter(o => o.category == "Casual")} />
-      <OutfitCategoryRow categoryTitle="Business Casual" outfits={outfits.filter(o => o.category == "Business Casual")} />
-      <OutfitCategoryRow categoryTitle="Business" outfits={outfits.filter(o => o.category == "Business")} />
-      <OutfitCategoryRow categoryTitle="Other" outfits={outfits.filter(o => o.category == "Other")} />
+      {
+        loading ?
+          <div className="flex items-top gap-3 flex-nowrap overflow-auto snap-x snap-mandatory scrollbar-none">
+            {Array.from(Array(3).keys()).map(i => <Skeleton key={i} className="h-50 w-35" />)}
+          </div> :
+          (
+            outfits.length ?
+              outfitCategories.map(cat => <OutfitCategoryRow categoryTitle={cat} outfits={outfits.filter(o => o.category == cat)} />) :
+              <EmptyState title="No outfit" message="You have no outfit. create some." />
+          )
+      }
       <Button
         variant={"default"}
         size={"lg"}
@@ -58,5 +82,6 @@ export default function OutfitsPage() {
         <PlusIcon />
       </Button>
     </div>
-  );
+  )
+
 }

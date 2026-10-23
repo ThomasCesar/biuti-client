@@ -88,16 +88,17 @@ export default function OutfitFormSheet() {
 
         <Activity mode={outfitStep == "PHOTO" ? "visible" : "hidden"}>
           <div className="flex flex-col gap-6 justify-start px-6">
-            <p>Upload a photo OR generate a preview with AI :</p>
+            <p>Upload a photo :</p>
             <div className="flex flex-col gap-2">
               <UploadImageZone initialImageUrl={outfitPhoto} onImageLoad={handleImageLoad} />
               <OutfitItemsList selectedItems={selectedItems} />
-              <Button variant={"default"} size={"lg"} className="w-full">GENERATE <Sparkle /></Button>
             </div>
             <p>Specify category :</p>
             <div className="flex items-center flex-wrap gap-2">
               {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-5 uppercase" onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
             </div>
+            <p>Generate your outfit with AI :</p>
+            <Button variant={"default"} size={"lg"} className="w-full">GENERATE <Sparkle /></Button>
           </div>
         </Activity>
 

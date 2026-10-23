@@ -1,6 +1,7 @@
 import type { User } from "./users";
 import type { Brand } from "./brands";
 import { apiDELETERequest, apiGETRequest, apiPOSTRequest, apiPUTRequest } from "./api";
+import { wait } from "./utils";
 
 export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
 export type ItemType = typeof allItemTypes[number];
@@ -31,7 +32,7 @@ export async function createItem(newItem: Omit<Item, 'id' | 'createdAt'>): Promi
 }
 
 export async function getItems(type?: string): Promise<Item[]> {
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await wait();
   return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
 }
 
@@ -40,6 +41,6 @@ export async function updateItem(itemId: Item["id"], partialItem: Partial<Omit<I
 }
 
 export async function deleteItem(itemId: string): Promise<boolean> {
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await wait();
   return await apiDELETERequest(`items/${itemId}`);
 }
