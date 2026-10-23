@@ -1,3 +1,4 @@
+import { apiPOSTRequest } from "./api";
 import type { Item } from "./items";
 
 export const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
@@ -9,7 +10,8 @@ export type Outfit = {
   image: string,
   description: string;
   category: OutfitCategory;
-  items: Item[]
+  items: Item[];
+  createdAt: string;
 }
 
 const randomItem: Item = {
@@ -31,7 +33,9 @@ export const outfits: Outfit[] = [
     image: "outfit-1.jpg",
     description: "",
     category: "Business Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "b",
@@ -39,7 +43,9 @@ export const outfits: Outfit[] = [
     image: "outfit-2.jpg",
     description: "",
     category: "Business Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "c",
@@ -47,7 +53,9 @@ export const outfits: Outfit[] = [
     image: "outfit-3.jpg",
     description: "",
     category: "Business Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "d",
@@ -55,7 +63,9 @@ export const outfits: Outfit[] = [
     image: "outfit-4.jpg",
     description: "",
     category: "Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "e",
@@ -63,7 +73,9 @@ export const outfits: Outfit[] = [
     image: "outfit-5.jpg",
     description: "",
     category: "Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "f",
@@ -71,7 +83,9 @@ export const outfits: Outfit[] = [
     image: "outfit-6.jpg",
     description: "",
     category: "Casual",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "g",
@@ -79,7 +93,9 @@ export const outfits: Outfit[] = [
     image: "outfit-7.jpg",
     description: "",
     category: "Business",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "h",
@@ -87,7 +103,9 @@ export const outfits: Outfit[] = [
     image: "outfit-8.jpg",
     description: "",
     category: "Business",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "i",
@@ -95,7 +113,8 @@ export const outfits: Outfit[] = [
     image: "outfit-9.jpg",
     description: "",
     category: "Business",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
   },
   {
     id: "j",
@@ -103,7 +122,9 @@ export const outfits: Outfit[] = [
     image: "outfit-10.jpg",
     description: "",
     category: "Other",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
   {
     id: "k",
@@ -111,6 +132,12 @@ export const outfits: Outfit[] = [
     image: "outfit-11.jpg",
     description: "",
     category: "Other",
-    items: [randomItem, randomItem, randomItem]
+    items: [randomItem, randomItem, randomItem],
+    createdAt: "2026-10-18T11:27:32.426Z"
+
   },
 ];
+
+export async function createOutfit(newOutfit: Omit<Outfit, 'id' | 'createdAt'>): Promise<Outfit> {
+  return await apiPOSTRequest<Outfit>('outfits', newOutfit);
+}
