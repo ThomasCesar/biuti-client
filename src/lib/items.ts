@@ -1,7 +1,7 @@
+import { wait } from "./utils";
 import type { User } from "./users";
 import type { Brand } from "./brands";
-import { apiDELETERequest, apiGETRequest, apiPOSTRequest, apiPUTRequest } from "./api";
-import { wait } from "./utils";
+import { apiDELETERequest, apiGETRequest, apiPATCHRequest, apiPOSTRequest } from "./api";
 
 export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
 export type ItemType = typeof allItemTypes[number];
@@ -22,35 +22,44 @@ export type Item = {
   brandId?: string,
   createdAt: string
 }
-
+/**
+ * Export stuff
+ */
 export const defaultItemType: ItemType = "Shirt";
-
 export const defaultItemMaterial: ItemMaterial = "Cotton";
-
-type NewItem = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
-
-export async function createItem(newItem: NewItem): Promise<Item> {
+export type ItemFieldsForCreate = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
+export type ItemFieldsForUpdate = Partial<ItemFieldsForCreate>;
+/**
+ * Creating an Item
+ */
+export async function createItem(newItem: ItemFieldsForCreate): Promise<Item> {
   const formData = new FormData();
-  formData.append("name", newItem.name);
-  formData.append("description", newItem.description);
-  formData.append("material", newItem.material);
-  formData.append("type", newItem.type);
-  formData.append("userId", newItem.userId);
-  formData.append("brandId", newItem.brandId);
-  formData.append("image", newItem.image);
+  for (const [key, value] of Object.entries(newItem)) {
+    formData.append(key, value);
+  }
   await wait();
   return await apiPOSTRequest(`items`, formData);
 }
-
+/**
+ * Get some/all items
+ */
 export async function getItems(type?: string): Promise<Item[]> {
   await wait();
   return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
 }
-
-export async function updateItem(itemId: Item["id"], partialItem: Partial<Omit<Item, 'id'>>): Promise<Item> {
-  return await apiPUTRequest<Item>(`items/${itemId}`, partialItem);
+/**
+ * Partial update of an item
+ */
+export async function updateItem(itemId: Item["id"], partialItem: ItemFieldsForUpdate): Promise<Item> {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(partialItem)) {
+    formData.append(key, value);
+  }
+  return await apiPATCHRequest<Item>(`items/${itemId}`, formData);
 }
-
+/**
+ * Delete an item
+ */
 export async function deleteItem(itemId: string): Promise<boolean> {
   await wait();
   return await apiDELETERequest(`items/${itemId}`);

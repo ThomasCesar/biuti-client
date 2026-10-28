@@ -35,22 +35,18 @@ export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T>
 }
 /**
  * ---------------------------------------------
- * make a put request
+ * make a patch request
  * 
  * @param uri 
  * @param body 
  * @returns 
  */
-export async function apiPUTRequest<T>(uri: string, body: Object): Promise<T> {
+export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<T> {
   const response = await fetch(
     `${BASE_URL_API}${uri}`,
     {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
+      method: 'PATCH',
+      body: body
     }
   );
   return await response.json();

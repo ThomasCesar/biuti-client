@@ -47,7 +47,6 @@ export default function OutfitFormSheet() {
 
   const handleSaveOutfit = async () => {
     setIsLoading(true);
-    console.log(OutfitItemsIds);
     await createOutfit({
       name: outfitName,
       image: "outfit-5.jpg",
