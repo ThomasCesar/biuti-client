@@ -1,8 +1,8 @@
 
+import { useState } from "react";
 import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
 import { useSheet } from "@/hooks/use-sheet";
-import { useCallback, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { defaultBrandId } from "@/lib/brands";
 import FieldRow from "@/components/field-row";
@@ -17,8 +17,8 @@ import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaul
 
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
-  const [itemPhoto, setItemPhoto] = useState<string | undefined>(item ? item.image : undefined);
   const [itemName, setItemName] = useState(item?.name || '');
+  const [itemImage, setItemImage] = useState<File | null>(null);
   const [itemDescription, setItemDescription] = useState(item?.description || '');
   const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
   const [itemMaterial, setItemMaterial] = useState<ItemMaterial>(item?.material || defaultItemMaterial);
@@ -26,11 +26,6 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
 
   const items = useItems();
   const sheet = useSheet();
-
-  const handleImageLoad = useCallback(async (imageUrl: string) => {
-    setItemPhoto(imageUrl);
-    await new Promise(res => setTimeout(res, 3000));
-  }, []);
 
   const handleSaveItem = async () => {
     setIsLoading(true);
@@ -49,15 +44,20 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       })
     }
     else {
+      if (!itemImage) {
+        setIsLoading(false);
+        return;
+      }
       const newItem = await createItem({
         name: itemName,
         description: itemDescription,
-        image: 't-shirt-2.webp',
         material: itemMaterial,
         type: itemType,
         userId: defaultUser.id,
         brandId: defaultBrandId,
+        image: itemImage
       })
+      console.log(newItem);
       items.dispatch({
         action: "ADD",
         items: [newItem]
@@ -71,7 +71,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       <SheetHeaderWithClose title={item ? `Edit item` : `Add item`} />
       <SheetContentBody>
         <div className="flex flex-col gap-5 justify-start px-6">
-          <UploadImageZone initialImageUrl={itemPhoto} onImageLoad={handleImageLoad} />
+          <UploadImageZone initialImageUrl={item?.image || undefined} onLoadFile={setItemImage} />
           <Table>
             <TableBody>
               <FieldRow title="Title">

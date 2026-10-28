@@ -1,13 +1,14 @@
 import type { Item } from "@/lib/items";
 import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
+import { Activity, useState } from "react";
+import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import FieldRow from "@/components/field-row";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Activity, useCallback, useState } from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
@@ -22,7 +23,7 @@ function OutfitItemsList({ OutfitItemsIds }: { OutfitItemsIds: Item["id"][] }) {
   const items = useItems();
   return (
     <div className="flex items-center justify-end flex-nowrap overflow-auto scrollbar-none gap-2">
-      {items.items.filter(i => OutfitItemsIds.includes(i.id)).map(i => <img src={i.image} key={i.id} className="w-10 h-10 rounded-sm object-cover" />)}
+      {items.items.filter(i => OutfitItemsIds.includes(i.id)).map(i => <img src={`${BASE_URL_UPLOADS}${i.image}`} key={i.id} className="w-10 h-10 rounded-sm object-cover" />)}
     </div>
   )
 }
@@ -32,16 +33,11 @@ export default function OutfitFormSheet() {
   const [outfitStep, setOutfitStep] = useState<OutfitStep>("ITEMS");
   const [outfitName, setOutfitName] = useState<Outfit['name']>("");
   const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>("");
-  const [outfitPhoto, setOutfitPhoto] = useState<Outfit['image']>("");
   const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>("Other");
   const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>([])
   const [isLoading, setIsLoading] = useState(false);
 
   const sheet = useSheet();
-
-  const handleImageLoad = useCallback(async (imageUrl: string) => {
-    setOutfitPhoto(imageUrl);
-  }, []);
 
   const handleSelectItem = (item: Item) => {
     OutfitItemsIds.includes(item.id) ?
@@ -90,7 +86,7 @@ export default function OutfitFormSheet() {
           <div className="flex flex-col gap-6 justify-start px-6">
             <p>Upload a photo :</p>
             <div className="flex flex-col gap-2">
-              <UploadImageZone initialImageUrl={outfitPhoto} onImageLoad={handleImageLoad} />
+              <UploadImageZone />
               <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
             </div>
             <p>Specify category :</p>

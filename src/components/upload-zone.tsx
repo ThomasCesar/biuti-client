@@ -3,13 +3,12 @@ import { ImageIcon } from "lucide-react";
 
 interface UploadZoneProps {
   initialImageUrl?: string;
-  onImageLoad: (url: string) => void;
+  onLoadFile?: (file: File) => void;
 }
 
-export function UploadImageZone({ initialImageUrl, onImageLoad }: UploadZoneProps) {
+export function UploadImageZone({ initialImageUrl, onLoadFile }: UploadZoneProps) {
 
   const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl || null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,7 +16,9 @@ export function UploadImageZone({ initialImageUrl, onImageLoad }: UploadZoneProp
     if (file) {
       const url = URL.createObjectURL(file);
       setImageUrl(url);
-      onImageLoad(url);
+      if (onLoadFile) {
+        onLoadFile(file);
+      }
     }
   };
 

@@ -1,4 +1,8 @@
-const BASE_URL = 'http://localhost:3000';
+/**
+ * export base urls used in the app to fetch static stuff
+*/
+export const BASE_URL_API = `http://localhost:3000/`;
+export const BASE_URL_UPLOADS = `${BASE_URL_API}uploads/`;
 /**
  * ---------------------------------------------
  * Make a get request
@@ -7,7 +11,7 @@ const BASE_URL = 'http://localhost:3000';
  * @returns 
  */
 export async function apiGETRequest<T>(uri: string): Promise<T> {
-  const response = await fetch(`${BASE_URL}/${uri}`);
+  const response = await fetch(`${BASE_URL_API}${uri}`);
   return await response.json();
 }
 /**
@@ -18,19 +22,16 @@ export async function apiGETRequest<T>(uri: string): Promise<T> {
  * @param body 
  * @returns 
  */
-export async function apiPOSTRequest<T>(uri: string, body: Object): Promise<T> {
+export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T> {
   const response = await fetch(
-    `${BASE_URL}/${uri}`,
+    `${BASE_URL_API}${uri}`,
     {
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
+      body: body
     }
   );
   return await response.json();
+
 }
 /**
  * ---------------------------------------------
@@ -42,7 +43,7 @@ export async function apiPOSTRequest<T>(uri: string, body: Object): Promise<T> {
  */
 export async function apiPUTRequest<T>(uri: string, body: Object): Promise<T> {
   const response = await fetch(
-    `${BASE_URL}/${uri}`,
+    `${BASE_URL_API}${uri}`,
     {
       method: 'PUT',
       headers: {
@@ -62,6 +63,6 @@ export async function apiPUTRequest<T>(uri: string, body: Object): Promise<T> {
  * @returns 
  */
 export async function apiDELETERequest(uri: string): Promise<boolean> {
-  const response = await fetch(`${BASE_URL}/${uri}`, { method: 'DELETE' });
+  const response = await fetch(`${BASE_URL_API}${uri}`, { method: 'DELETE' });
   return await response.json();
 }

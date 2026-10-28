@@ -1,13 +1,15 @@
-import EmptyState from "./empty-state";
-import type { Item, ItemType } from "@/lib/items";
-import { Skeleton } from "./ui/skeleton";
-import { useSheet } from "@/hooks/use-sheet";
-import ItemDetailsSheet from "@/dialogs/item-sheet";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
+import EmptyState from "./empty-state";
+import { Skeleton } from "./ui/skeleton";
 import useItems from "@/hooks/use-items";
-import useItemsSelect from "@/hooks/use-items-select";
 import { CheckCircle2 } from "lucide-react";
+import { useSheet } from "@/hooks/use-sheet";
+import { BASE_URL_UPLOADS } from "@/lib/api";
+import type { Item, ItemType } from "@/lib/items";
+import ItemDetailsSheet from "@/dialogs/item-sheet";
+import useItemsSelect from "@/hooks/use-items-select";
+
 /**
  * -------------------------------------------------
  * Single item component
@@ -20,7 +22,7 @@ function ClothingItem({ item, selected, action }: { item: Item, selected?: boole
     >
       {selected && <CheckCircle2 className="absolute top-1 right-1 fill-primary stroke-primary-foreground " />}
       <img
-        src={item.image.length ? item.image : undefined}
+        src={item.image.length ? `${BASE_URL_UPLOADS}${item.image}` : undefined}
         alt={item.name}
         className={selected ? "w-full h-32 object-cover rounded-sm" : "w-full h-32 object-cover rounded-sm"}
       />

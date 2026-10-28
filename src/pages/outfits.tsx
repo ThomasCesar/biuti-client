@@ -7,14 +7,15 @@ import OutfitFormSheet from "@/dialogs/outfit-form-sheet";
 import { useEffect, useState } from "react";
 import EmptyState from "@/components/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BASE_URL_UPLOADS } from "@/lib/api";
 
 function OutfitCard({ outfit }: { outfit: Outfit }) {
   return (
     <div className="min-w-35 snap-end">
       <div className="relative w-full h-50 rounded-sm overflow-clip">
-        <img src={outfit.image} className="w-full h-50 object-cover" />
+        <img src={`${BASE_URL_UPLOADS}${outfit.image}`} className="w-full h-50 object-cover" />
         <div className="absolute bottom-0 w-full flex items-center justify-end gap-1 p-1">
-          {outfit.items.slice(0, 2).map((i, idx) => <img src={i.image} key={idx} className="w-8 h-8 rounded-sm" />)}
+          {outfit.items.slice(0, 2).map((i, idx) => <img src={`${BASE_URL_UPLOADS}${i.image}`} key={idx} className="w-8 h-8 rounded-sm" />)}
           {outfit.items.length > 2 && <span className="w-8 h-8 rounded-sm bg-background text-center leading-8 text-sm text-muted-foreground">+{outfit.items.length - 2}</span>}
         </div>
       </div>

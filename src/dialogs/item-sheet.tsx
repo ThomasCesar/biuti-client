@@ -9,6 +9,7 @@ import { deleteItem, type Item } from "@/lib/items";
 import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
+import { BASE_URL_UPLOADS } from "@/lib/api";
 /**
  * ------------------------------------------------------------------
  * A single row of the table
@@ -51,7 +52,7 @@ export default function ItemDetailsSheet({ item }: { item: Item }) {
             </Button>
           }
         />
-        <img className="w-full h-[40vh] object-cover -z-10 relative" src={item.image} />
+        <img className="w-full h-[40vh] object-cover -z-10 relative" src={`${BASE_URL_UPLOADS}${item.image}`} />
         <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl">
           <div className="flex justify-between items-center mb-5">
             <p className="text-2xl ">{item.name}</p>

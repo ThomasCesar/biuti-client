@@ -7,6 +7,7 @@ import Logo from "@/components/logo";
 import { UploadImageZone } from "@/components/upload-zone";
 import { AnalysisLoader } from "@/components/analysis-loader";
 import { Button } from "@/components/ui/button";
+import { wait } from "@/lib/utils";
 
 type Stage = "upload" | "analyzing" | "results";
 
@@ -39,14 +40,14 @@ export default function ColorimetryPage() {
 
   // callback to process the file
 
-  const handleImageUpload = useCallback(async (imageUrl: string) => {
-    setPhotoUrl(imageUrl);
+  const handleImageUpload = useCallback(async (file: File) => {
+    const fileUrl = URL.createObjectURL(file);
+    setPhotoUrl(fileUrl);
     setStage("analyzing");
-    await new Promise(res => setTimeout(res, 400));
+    await wait();
     try {
-      const analysis = await analyzePhoto(imageUrl);
-      await new Promise(res => setTimeout(res, 2200));
-      console.log(analysis);
+      const analysis = await analyzePhoto(fileUrl);
+      await wait();
       setResult(analysis);
       setStage("results");
     } catch {
@@ -78,7 +79,7 @@ export default function ColorimetryPage() {
           <>
             <p className="text-2xl font-light">Discover your perfect palette</p>
             <p className="text-muted-foreground">Upload a photo and our colorimetry engine will determine your seasonal color type.</p>
-            <UploadImageZone onImageLoad={handleImageUpload} />
+            <UploadImageZone onLoadFile={handleImageUpload} />
             <div className="grid grid-cols-2 gap-3 @md:grid-cols-4">
               {Object.values(SEASONS).map(s => (
                 <div key={s.season} className="rounded-xl p-5 border">

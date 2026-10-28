@@ -27,8 +27,19 @@ export const defaultItemType: ItemType = "Shirt";
 
 export const defaultItemMaterial: ItemMaterial = "Cotton";
 
-export async function createItem(newItem: Omit<Item, 'id' | 'createdAt'>): Promise<Item> {
-  return await apiPOSTRequest<Item>('items', newItem);
+type NewItem = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
+
+export async function createItem(newItem: NewItem): Promise<Item> {
+  const formData = new FormData();
+  formData.append("name", newItem.name);
+  formData.append("description", newItem.description);
+  formData.append("material", newItem.material);
+  formData.append("type", newItem.type);
+  formData.append("userId", newItem.userId);
+  formData.append("brandId", newItem.brandId);
+  formData.append("image", newItem.image);
+  await wait();
+  return await apiPOSTRequest(`items`, formData);
 }
 
 export async function getItems(type?: string): Promise<Item[]> {
