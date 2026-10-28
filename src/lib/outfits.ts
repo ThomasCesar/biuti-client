@@ -1,6 +1,7 @@
 import { wait } from "./utils";
 import type { Item } from "./items";
 import { apiGETRequest, apiPOSTRequest } from "./api";
+import type { User } from "./users";
 
 export const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
 export type OutfitCategory = typeof allOutfitCategories[number];
@@ -12,10 +13,14 @@ export type Outfit = {
   description: string;
   category: OutfitCategory;
   items: Item[];
+  user?: User;
+  userId?: string;
   createdAt: string;
 }
 
-export async function createOutfit(newOutfit: Omit<Outfit, 'id' | 'createdAt'>): Promise<Outfit> {
+export type NewOutfit = Omit<Outfit, "id" | "items" | "createdAt"> & { itemsIds: Item["id"][] }
+
+export async function createOutfit(newOutfit: NewOutfit): Promise<Outfit> {
   return await apiPOSTRequest<Outfit>('outfits', newOutfit);
 }
 

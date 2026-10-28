@@ -1,5 +1,6 @@
 import type { Item } from "@/lib/items";
 import useItems from "@/hooks/use-items";
+import { defaultUser } from "@/lib/users";
 import { useSheet } from "@/hooks/use-sheet";
 import FieldRow from "@/components/field-row";
 import { Badge } from "@/components/ui/badge";
@@ -9,19 +10,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Activity, useCallback, useState } from "react";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
-import { allOutfitCategories, createOutfit, type Outfit } from "@/lib/outfits";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
 import { ClothingItemGridWithFilter } from "@/components/clothing-item";
+import { allOutfitCategories, createOutfit, type Outfit } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
 
 type OutfitStep = 'ITEMS' | 'PHOTO' | 'INFO';
 
-function OutfitItemsList({ selectedItems }: { selectedItems: Item["id"][] }) {
+function OutfitItemsList({ OutfitItemsIds }: { OutfitItemsIds: Item["id"][] }) {
   const items = useItems();
   return (
     <div className="flex items-center justify-end flex-nowrap overflow-auto scrollbar-none gap-2">
-      {selectedItems.map(itemId => <img src={items.items.find(i => i.id == itemId)?.image} className="w-10 h-10 rounded-sm object-cover" />)}
+      {items.items.filter(i => OutfitItemsIds.includes(i.id)).map(i => <img src={i.image} key={i.id} className="w-10 h-10 rounded-sm object-cover" />)}
     </div>
   )
 }
@@ -29,36 +30,35 @@ function OutfitItemsList({ selectedItems }: { selectedItems: Item["id"][] }) {
 export default function OutfitFormSheet() {
 
   const [outfitStep, setOutfitStep] = useState<OutfitStep>("ITEMS");
-  const [selectedItems, setSelectedItems] = useState<Item["id"][]>([])
-  const [outfitPhoto, setOutfitPhoto] = useState<Outfit['image']>("");
   const [outfitName, setOutfitName] = useState<Outfit['name']>("");
   const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>("");
+  const [outfitPhoto, setOutfitPhoto] = useState<Outfit['image']>("");
   const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>("Other");
+  const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>([])
   const [isLoading, setIsLoading] = useState(false);
 
   const sheet = useSheet();
-  const items = useItems();
 
   const handleImageLoad = useCallback(async (imageUrl: string) => {
     setOutfitPhoto(imageUrl);
-    await new Promise(res => setTimeout(res, 3000));
   }, []);
 
   const handleSelectItem = (item: Item) => {
-    selectedItems.includes(item.id) ?
-      setSelectedItems(selectedItems.filter(itemId => itemId !== item.id)) :
-      setSelectedItems([...selectedItems, ...[item.id]])
+    OutfitItemsIds.includes(item.id) ?
+      setOutfitItemsIds(OutfitItemsIds.filter(itemId => itemId !== item.id)) :
+      setOutfitItemsIds([...OutfitItemsIds, ...[item.id]])
   }
 
   const handleSaveOutfit = async () => {
     setIsLoading(true);
-    console.log(selectedItems);
+    console.log(OutfitItemsIds);
     await createOutfit({
       name: outfitName,
       image: "outfit-5.jpg",
       description: outfitDescription,
       category: outfitCategory,
-      items: items.items.filter(i => selectedItems.includes(i.id))
+      itemsIds: OutfitItemsIds,
+      userId: defaultUser.id
     })
     sheet.closeSheet();
   }
@@ -77,7 +77,7 @@ export default function OutfitFormSheet() {
         {/* -- STEP 1 : SELECT ALL THE CLOTHING ITEMS  -- */}
 
         <Activity mode={outfitStep == "ITEMS" ? "visible" : "hidden"}>
-          <ItemsSelectContext.Provider value={{ selectedIds: selectedItems, action: handleSelectItem }}>
+          <ItemsSelectContext.Provider value={{ selectedIds: OutfitItemsIds, action: handleSelectItem }}>
             <div className="space-y-5 px-6">
               <ClothingItemGridWithFilter />
             </div>
@@ -91,11 +91,11 @@ export default function OutfitFormSheet() {
             <p>Upload a photo :</p>
             <div className="flex flex-col gap-2">
               <UploadImageZone initialImageUrl={outfitPhoto} onImageLoad={handleImageLoad} />
-              <OutfitItemsList selectedItems={selectedItems} />
+              <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
             </div>
             <p>Specify category :</p>
             <div className="flex items-center flex-wrap gap-2">
-              {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-5 uppercase" onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
+              {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-5 uppercase" key={cat} onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
             </div>
             <p>Generate your outfit with AI :</p>
             <Button variant={"default"} size={"lg"} className="w-full">GENERATE <Sparkle /></Button>
@@ -108,7 +108,7 @@ export default function OutfitFormSheet() {
           <div className="flex flex-col gap-5 justify-start px-6">
             <div className="flex flex-col gap-2 w-full">
               <img src="outfit-5.jpg" className="w-full h-[45vh] object-cover rounded-sm" />
-              <OutfitItemsList selectedItems={selectedItems} />
+              <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
             </div>
             <Table>
               <TableBody>

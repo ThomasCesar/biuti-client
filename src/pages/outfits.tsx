@@ -68,7 +68,7 @@ export default function OutfitsPage() {
           </div> :
           (
             outfits.length ?
-              outfitCategories.map(cat => <OutfitCategoryRow categoryTitle={cat} outfits={outfits.filter(o => o.category == cat)} />) :
+              outfitCategories.map(cat => <OutfitCategoryRow categoryTitle={cat} key={cat} outfits={outfits.filter(o => o.category == cat)} />) :
               <EmptyState title="No outfit" message="You have no outfit. create some." />
           )
       }
