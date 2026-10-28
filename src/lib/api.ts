@@ -5,10 +5,25 @@ export const BASE_URL_API = `http://localhost:3000/`;
 export const BASE_URL_UPLOADS = `${BASE_URL_API}uploads/`;
 /**
  * ---------------------------------------------
+ * Build a formData from an object
+ */
+export function buildFormData(theObject: Record<string, string | File | number | string[] | number[]>): FormData {
+  const formData = new FormData();
+  for (const [key, value] of Object.entries(theObject)) {
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        formData.append(`${key}[]`, String(item));
+      }
+    }
+    else {
+      formData.append(key, typeof value === 'number' ? String(value) : value);
+    }
+  }
+  return formData;
+}
+/**
+ * ---------------------------------------------
  * Make a get request
- * 
- * @param uri 
- * @returns 
  */
 export async function apiGETRequest<T>(uri: string): Promise<T> {
   const response = await fetch(`${BASE_URL_API}${uri}`);
@@ -17,10 +32,6 @@ export async function apiGETRequest<T>(uri: string): Promise<T> {
 /**
  * --------------------------------------------
  * make a post request
- * 
- * @param uri 
- * @param body 
- * @returns 
  */
 export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T> {
   const response = await fetch(
@@ -36,10 +47,6 @@ export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T>
 /**
  * ---------------------------------------------
  * make a patch request
- * 
- * @param uri 
- * @param body 
- * @returns 
  */
 export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<T> {
   const response = await fetch(
@@ -54,9 +61,6 @@ export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<T
 /**
  * ---------------------------------------------
  * Make a delete request
- * 
- * @param uri 
- * @returns 
  */
 export async function apiDELETERequest(uri: string): Promise<boolean> {
   const response = await fetch(`${BASE_URL_API}${uri}`, { method: 'DELETE' });

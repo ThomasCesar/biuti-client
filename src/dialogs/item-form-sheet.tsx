@@ -14,7 +14,7 @@ import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import SelectFieldRow from "@/components/select-field-row";
 import { SheetContentBody, SheetFooterWithClose, SheetHeaderWithClose } from "@/components/ui/sheet";
-import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaultItemType, updateItem, type Item, type ItemFieldsForUpdate, type ItemMaterial, type ItemType, type ItemFieldsForCreate } from "@/lib/items";
+import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaultItemType, updateItem, type Item, type ItemForUpdate, type ItemMaterial, type ItemType, type ItemForCreate } from "@/lib/items";
 
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
@@ -36,7 +36,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
 
       // --> update the item (PATCH) if it exists
 
-      let partialItem: ItemFieldsForUpdate = {
+      let partialItem: ItemForUpdate = {
         name: itemName,
         description: itemDescription,
         material: itemMaterial,
@@ -60,7 +60,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         setIsLoading(false);
         return;
       }
-      const newItem: ItemFieldsForCreate = {
+      const newItem: ItemForCreate = {
         name: itemName,
         description: itemDescription,
         material: itemMaterial,

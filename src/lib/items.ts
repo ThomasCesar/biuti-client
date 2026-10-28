@@ -1,8 +1,10 @@
 import { wait } from "./utils";
 import type { User } from "./users";
 import type { Brand } from "./brands";
-import { apiDELETERequest, apiGETRequest, apiPATCHRequest, apiPOSTRequest } from "./api";
-
+import { apiDELETERequest, apiGETRequest, apiPATCHRequest, apiPOSTRequest, buildFormData } from "./api";
+/**
+ * types and stuff
+ */
 export const allItemTypes = ["Accessory", "Hat", "Jacket", "Pants", "Shirt", "Shoes"] as const;
 export type ItemType = typeof allItemTypes[number];
 
@@ -22,23 +24,19 @@ export type Item = {
   brandId?: string,
   createdAt: string
 }
-/**
- * Export stuff
- */
+
 export const defaultItemType: ItemType = "Shirt";
 export const defaultItemMaterial: ItemMaterial = "Cotton";
-export type ItemFieldsForCreate = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
-export type ItemFieldsForUpdate = Partial<ItemFieldsForCreate>;
+
+export type ItemForCreate = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
+export type ItemForUpdate = Partial<ItemForCreate>;
+
 /**
  * Creating an Item
  */
-export async function createItem(newItem: ItemFieldsForCreate): Promise<Item> {
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(newItem)) {
-    formData.append(key, value);
-  }
+export async function createItem(newItem: ItemForCreate): Promise<Item> {
   await wait();
-  return await apiPOSTRequest(`items`, formData);
+  return await apiPOSTRequest(`items`, buildFormData(newItem));
 }
 /**
  * Get some/all items
@@ -50,12 +48,8 @@ export async function getItems(type?: string): Promise<Item[]> {
 /**
  * Partial update of an item
  */
-export async function updateItem(itemId: Item["id"], partialItem: ItemFieldsForUpdate): Promise<Item> {
-  const formData = new FormData();
-  for (const [key, value] of Object.entries(partialItem)) {
-    formData.append(key, value);
-  }
-  return await apiPATCHRequest<Item>(`items/${itemId}`, formData);
+export async function updateItem(itemId: Item["id"], partialItem: ItemForUpdate): Promise<Item> {
+  return await apiPATCHRequest<Item>(`items/${itemId}`, buildFormData(partialItem));
 }
 /**
  * Delete an item

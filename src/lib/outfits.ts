@@ -1,8 +1,11 @@
 import { wait } from "./utils";
 import type { Item } from "./items";
-import { apiGETRequest, apiPOSTRequest } from "./api";
+import { apiGETRequest, apiPOSTRequest, buildFormData } from "./api";
 import type { User } from "./users";
 
+/**
+ * Types and stuff
+ */
 export const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
 export type OutfitCategory = typeof allOutfitCategories[number];
 
@@ -18,13 +21,19 @@ export type Outfit = {
   createdAt: string;
 }
 
-export type NewOutfit = Omit<Outfit, "id" | "items" | "createdAt"> & { itemsIds: Item["id"][] }
+export type OutfitForCreate = Omit<Outfit, "id" | "image" | "items" | "user" | "createdAt"> & { itemsIds: Item["id"][] } & { image: File }
 
-export async function createOutfit(newOutfit: NewOutfit): Promise<Outfit> {
-  return await apiPOSTRequest<Outfit>('outfits', newOutfit);
-}
-
+/**
+ * Get all outfits
+ */
 export async function getOutfits(): Promise<Outfit[]> {
   await wait();
   return await apiGETRequest(`outfits`)
+}
+/**
+ * Create a new outfit
+ */
+export async function createOutfit(newOutfit: OutfitForCreate): Promise<Outfit> {
+  await wait();
+  return await apiPOSTRequest<Outfit>('outfits', buildFormData(newOutfit));
 }

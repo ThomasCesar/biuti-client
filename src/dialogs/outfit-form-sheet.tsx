@@ -13,7 +13,7 @@ import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
 import { ClothingItemGridWithFilter } from "@/components/clothing-item";
-import { allOutfitCategories, createOutfit, type Outfit } from "@/lib/outfits";
+import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
 
@@ -32,6 +32,8 @@ export default function OutfitFormSheet() {
 
   const [outfitStep, setOutfitStep] = useState<OutfitStep>("ITEMS");
   const [outfitName, setOutfitName] = useState<Outfit['name']>("");
+  const [outfitImage, setOutfitImage] = useState<File | undefined>(undefined);
+  const [outfitImageUrl, setOutfitImageUrl] = useState<string | undefined>(undefined);
   const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>("");
   const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>("Other");
   const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>([])
@@ -45,16 +47,26 @@ export default function OutfitFormSheet() {
       setOutfitItemsIds([...OutfitItemsIds, ...[item.id]])
   }
 
+  const handleLoadOutfitImage = (image: File) => {
+    setOutfitImage(image);
+    setOutfitImageUrl(URL.createObjectURL(image));
+  }
+
   const handleSaveOutfit = async () => {
     setIsLoading(true);
-    await createOutfit({
+    if (!outfitImage) {
+      setIsLoading(false);
+      return;
+    }
+    const newItem: OutfitForCreate = {
       name: outfitName,
-      image: "outfit-5.jpg",
       description: outfitDescription,
       category: outfitCategory,
       itemsIds: OutfitItemsIds,
-      userId: defaultUser.id
-    })
+      userId: defaultUser.id,
+      image: outfitImage
+    }
+    await createOutfit(newItem);
     sheet.closeSheet();
   }
 
@@ -85,7 +97,7 @@ export default function OutfitFormSheet() {
           <div className="flex flex-col gap-6 justify-start px-6">
             <p>Upload a photo :</p>
             <div className="flex flex-col gap-2">
-              <UploadImageZone />
+              <UploadImageZone onLoadFile={handleLoadOutfitImage} />
               <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
             </div>
             <p>Specify category :</p>
@@ -102,7 +114,7 @@ export default function OutfitFormSheet() {
         <Activity mode={outfitStep == "INFO" ? "visible" : "hidden"}>
           <div className="flex flex-col gap-5 justify-start px-6">
             <div className="flex flex-col gap-2 w-full">
-              <img src="outfit-5.jpg" className="w-full h-[45vh] object-cover rounded-sm" />
+              <img src={outfitImageUrl} className="w-full h-[45vh] object-cover rounded-sm" />
               <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
             </div>
             <Table>
