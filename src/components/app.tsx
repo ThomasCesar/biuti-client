@@ -1,20 +1,21 @@
 import HomePage from "@/pages/home";
+import { Toaster } from "./ui/toast";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import WelcomePage from "@/pages/welcome";
+import OutfitsPage from "@/pages/outfits";
 import AccountPage from "@/pages/account";
 import WardrobePage from "@/pages/wardrobe";
 import NotFoundPage from "@/pages/not-found";
 import ColorimetryPage from "@/pages/colorimetry";
 import MobileLayout from "@/layouts/mobile-layout";
 import { AuthProvider } from "@/contexts/auth-provider";
+import OutfitsProvider from "@/contexts/outfits-provider";
 import { SheetProvider } from "@/contexts/sheet-provider";
 import { ItemsProvider } from "@/contexts/items-provider";
 import NavigationLayout from "@/layouts/navigation-layout";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ProtectedRouteLayout } from "@/layouts/protected-route-layout";
-import OutfitsPage from "@/pages/outfits";
-import OutfitsProvider from "@/contexts/outfits-provider";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
               <SheetProvider>
                 <ProtectedRouteLayout />
               </SheetProvider>
+              <Toaster />
             </OutfitsProvider>
           </ItemsProvider>
         ),

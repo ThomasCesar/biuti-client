@@ -4,6 +4,7 @@ import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
+import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { defaultBrandId } from "@/lib/brands";
 import FieldRow from "@/components/field-row";
@@ -46,10 +47,18 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         partialItem.image = itemImage;
       }
       const result = await updateItem(item.id, partialItem);
+      setIsLoading(false);
       if (!result.success) {
-        alert(`Error : ${result.error}`);
+        toast.add({
+          type: "error",
+          description: result.error
+        })
       }
       else {
+        toast.add({
+          type: "success",
+          description: "Item updated"
+        })
         items.dispatch({
           action: "UPDATE",
           id: item.id,
@@ -63,6 +72,10 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
 
       if (!itemImage) {
         setIsLoading(false);
+        toast.add({
+          type: "error",
+          description: "Choose an image bitch."
+        })
         return;
       }
       const newItem: ItemForCreate = {
@@ -75,10 +88,18 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         image: itemImage
       }
       const result = await createItem(newItem);
+      setIsLoading(false);
       if (!result.success) {
-        alert(`Error : ${result.error}`);
+        toast.add({
+          type: "error",
+          description: result.error
+        })
       }
       else {
+        toast.add({
+          type: "success",
+          description: "Item created"
+        })
         items.dispatch({
           action: "ADD",
           items: [result.result]

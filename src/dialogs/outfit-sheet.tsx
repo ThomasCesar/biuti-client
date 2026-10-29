@@ -1,12 +1,13 @@
-import FieldRow from "@/components/field-row";
-import { Button } from "@/components/ui/button";
-import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
-import { Table, TableBody } from "@/components/ui/table";
-import { useOutfits } from "@/hooks/use-outfits";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
+import { toast } from "@/components/ui/toast";
+import FieldRow from "@/components/field-row";
+import { Button } from "@/components/ui/button";
+import { useOutfits } from "@/hooks/use-outfits";
+import { Table, TableBody } from "@/components/ui/table";
 import { deleteOutfit, type Outfit } from "@/lib/outfits";
 import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
+import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
 import { useState } from "react";
 
 export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
@@ -19,11 +20,19 @@ export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
   const handleDeleteOutfit = async () => {
     setIsLoading(true);
     const result = await deleteOutfit(outfit.id);
+    setIsLoading(false);
     if (!result.success) {
-      alert(`Error : ${result.error}`);
+      toast.add({
+        type: "error",
+        description: result.error
+      })
     }
     else {
       outfits.dispatch({ action: "DELETE", id: outfit.id })
+      toast.add({
+        type: "success",
+        description: "Outfit deleted"
+      })
       sheet.closeSheet();
     }
   }

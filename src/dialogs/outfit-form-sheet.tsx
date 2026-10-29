@@ -4,19 +4,20 @@ import { defaultUser } from "@/lib/users";
 import { Activity, useState } from "react";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
+import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useOutfits } from "@/hooks/use-outfits";
 import { Textarea } from "@/components/ui/textarea";
+import { ItemsGridWithFilter } from "@/components/item";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
-import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
-import { useOutfits } from "@/hooks/use-outfits";
-import { ItemsGridWithFilter } from "@/components/item";
+import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 
 type OutfitStep = 'ITEMS' | 'PHOTO' | 'INFO';
 
@@ -58,6 +59,10 @@ export default function OutfitFormSheet() {
   const handleSaveOutfit = async () => {
     setIsLoading(true);
     if (!outfitImage) {
+      toast.add({
+        type: "error",
+        description: "Choose an image bitch"
+      })
       setIsLoading(false);
       return;
     }
@@ -70,13 +75,21 @@ export default function OutfitFormSheet() {
       image: outfitImage
     }
     const result = await createOutfit(newItem);
+    setIsLoading(false);
     if (!result.success) {
-      alert(`Error : ${result.error}`)
+      toast.add({
+        type: "error",
+        description: result.error
+      })
     }
     else {
       outfits.dispatch({
         action: "ADD",
         outfits: [result.result]
+      })
+      toast.add({
+        type: "success",
+        description: "Outfit created"
       })
       sheet.closeSheet();
     }

@@ -4,6 +4,7 @@ import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import ItemFormSheet from "./item-form-sheet";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
 import BrandLogo from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
@@ -22,11 +23,19 @@ export default function ItemSheet({ item }: { item: Item }) {
   const handleDeleteItem = async () => {
     setIsLoading(true);
     const result = await deleteItem(item.id);
+    setIsLoading(false);
     if (!result.success) {
-      alert(`Error : ${result.error}`)
+      toast.add({
+        type: "error",
+        description: result.error
+      })
     }
     else {
       items.dispatch({ action: "DELETE", id: item.id });
+      toast.add({
+        type: "success",
+        description: "Item deleted"
+      })
       sheet.closeSheet();
     }
   }
