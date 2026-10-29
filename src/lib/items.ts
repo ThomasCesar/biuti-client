@@ -34,27 +34,27 @@ export type ItemForUpdate = Partial<ItemForCreate>;
 /**
  * Creating an Item
  */
-export async function createItem(newItem: ItemForCreate): Promise<Item> {
+export async function createItem(newItem: ItemForCreate) {
   await wait();
-  return await apiPOSTRequest(`items`, buildFormData(newItem));
+  return await apiPOSTRequest<Item>(`items`, buildFormData(newItem));
 }
 /**
  * Get some/all items
  */
-export async function getItems(type?: string): Promise<Item[]> {
+export async function getItems(type?: string) {
   await wait();
-  return await apiGETRequest(`items${type ? `?type=${type}` : ``}`)
+  return await apiGETRequest<Item[]>(`items${type ? `?type=${type}` : ``}`)
 }
 /**
  * Partial update of an item
  */
-export async function updateItem(itemId: Item["id"], partialItem: ItemForUpdate): Promise<Item> {
+export async function updateItem(itemId: Item["id"], partialItem: ItemForUpdate) {
   return await apiPATCHRequest<Item>(`items/${itemId}`, buildFormData(partialItem));
 }
 /**
  * Delete an item
  */
-export async function deleteItem(itemId: string): Promise<boolean> {
+export async function deleteItem(itemId: string) {
   await wait();
   return await apiDELETERequest(`items/${itemId}`);
 }

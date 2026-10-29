@@ -7,7 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import type { Item, ItemType } from "@/lib/items";
-import ItemDetailsSheet from "@/dialogs/item-sheet";
+import ItemSheet from "@/dialogs/item-sheet";
 import useItemsSelect from "@/hooks/use-items-select";
 
 /**
@@ -53,7 +53,7 @@ export default function ItemsGrid({ items }: { items: Item[] }) {
               selected={itemsSelect?.selectedIds.includes(item.id)}
               key={item.id}
               item={item}
-              action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemDetailsSheet item={item} />)}
+              action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemSheet item={item} />)}
             />
           ))
         }

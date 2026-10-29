@@ -3,10 +3,16 @@ import EmptyState from "./empty-state";
 import type { Outfit } from "@/lib/outfits";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useOutfits } from "@/hooks/use-outfits";
+import { useSheet } from "@/hooks/use-sheet";
+import OutfitSheet from "@/dialogs/outfit-sheet";
 
 function OutfitCard({ outfit }: { outfit: Outfit }) {
+  const sheet = useSheet();
   return (
-    <div className="min-w-35 max-w-35 snap-end">
+    <div
+      className="min-w-35 max-w-35 snap-end"
+      onClick={() => sheet.openSheet(<OutfitSheet outfit={outfit} />)}
+    >
       <div className="relative w-full h-50 rounded-sm overflow-clip">
         <img src={`${BASE_URL_UPLOADS}${outfit.image}`} className="w-full h-full object-cover" />
         <div className="absolute bottom-0 w-full flex items-center justify-end gap-1 p-1">

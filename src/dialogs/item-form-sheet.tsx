@@ -45,12 +45,17 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       if (itemImage) {
         partialItem.image = itemImage;
       }
-      const itemUpdated = await updateItem(item.id, partialItem);
-      items.dispatch({
-        action: "UPDATE",
-        id: item.id,
-        item: itemUpdated
-      })
+      const result = await updateItem(item.id, partialItem);
+      if (!result.success) {
+        alert(`Error : ${result.error}`);
+      }
+      else {
+        items.dispatch({
+          action: "UPDATE",
+          id: item.id,
+          item: result.result
+        })
+      }
     }
     else {
 
@@ -69,11 +74,16 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         brandId: defaultBrandId,
         image: itemImage
       }
-      const itemCreated = await createItem(newItem)
-      items.dispatch({
-        action: "ADD",
-        items: [itemCreated]
-      })
+      const result = await createItem(newItem);
+      if (!result.success) {
+        alert(`Error : ${result.error}`);
+      }
+      else {
+        items.dispatch({
+          action: "ADD",
+          items: [result.result]
+        })
+      }
     }
     sheet.closeSheet();
   }

@@ -12,11 +12,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
-import { ItemsGridWithFilter } from "@/components/item";
 import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
 import { useOutfits } from "@/hooks/use-outfits";
+import { ItemsGridWithFilter } from "@/components/item";
 
 type OutfitStep = 'ITEMS' | 'PHOTO' | 'INFO';
 
@@ -69,12 +69,17 @@ export default function OutfitFormSheet() {
       userId: defaultUser.id,
       image: outfitImage
     }
-    const outfitCreated = await createOutfit(newItem);
-    outfits.dispatch({
-      action: "ADD",
-      outfits: [outfitCreated]
-    })
-    sheet.closeSheet();
+    const result = await createOutfit(newItem);
+    if (!result.success) {
+      alert(`Error : ${result.error}`)
+    }
+    else {
+      outfits.dispatch({
+        action: "ADD",
+        outfits: [result.result]
+      })
+      sheet.closeSheet();
+    }
   }
 
   return (

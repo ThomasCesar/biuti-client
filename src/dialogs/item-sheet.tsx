@@ -1,34 +1,18 @@
 import { useState } from "react";
 import useItems from "@/hooks/use-items";
+import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import ItemFormSheet from "./item-form-sheet";
 import { Badge } from "@/components/ui/badge";
+import FieldRow from "@/components/field-row";
 import BrandLogo from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
 import { deleteItem, type Item } from "@/lib/items";
+import { Table, TableBody } from "@/components/ui/table";
 import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
-import { BASE_URL_UPLOADS } from "@/lib/api";
-/**
- * ------------------------------------------------------------------
- * A single row of the table
- */
-function FieldRow({ title, children }: { title: string, children: React.ReactNode }) {
-  return (
-    <TableRow>
-      <TableCell className="text-muted-foreground">{title}</TableCell>
-      <TableCell className="text-right">
-        {children}
-      </TableCell>
-    </TableRow>
-  )
-}
-/**
- * ------------------------------------------------------------------
- * The dialog content
- */
-export default function ItemDetailsSheet({ item }: { item: Item }) {
+
+export default function ItemSheet({ item }: { item: Item }) {
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,9 +21,14 @@ export default function ItemDetailsSheet({ item }: { item: Item }) {
 
   const handleDeleteItem = async () => {
     setIsLoading(true);
-    await deleteItem(item.id);
-    items.dispatch({ action: "DELETE", id: item.id });
-    sheet.closeSheet();
+    const result = await deleteItem(item.id);
+    if (!result.success) {
+      alert(`Error : ${result.error}`)
+    }
+    else {
+      items.dispatch({ action: "DELETE", id: item.id });
+      sheet.closeSheet();
+    }
   }
 
   return (

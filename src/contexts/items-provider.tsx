@@ -25,7 +25,8 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getAllItems = async () => {
-      const items = await getItems();
+      const result = await getItems();
+      const items = (result.success ? result.result : []);
       items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime());
       dispatchItems({ action: "LOAD", items: items });
       setIsLoaded(true);
