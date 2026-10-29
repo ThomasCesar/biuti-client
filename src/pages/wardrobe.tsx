@@ -4,7 +4,7 @@ import useItems from "@/hooks/use-items";
 import { useSheet } from "@/hooks/use-sheet";
 import { Button } from "@/components/ui/button";
 import ItemFormSheet from "@/dialogs/item-form-sheet";
-import { ClothingItemGridSkeleton, ClothingItemGridWithFilter } from "@/components/clothing-item";
+import { ItemsGridSkeleton, ItemsGridWithFilter } from "@/components/item";
 
 export default function WardrobePage() {
 
@@ -16,8 +16,8 @@ export default function WardrobePage() {
       <Header text="Wardrobe" />
       {
         !items.loaded ?
-          <ClothingItemGridSkeleton /> :
-          <ClothingItemGridWithFilter />
+          <ItemsGridSkeleton /> :
+          <ItemsGridWithFilter />
       }
       <Button
         variant={"default"}

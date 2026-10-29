@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
-import { ClothingItemGridWithFilter } from "@/components/clothing-item";
+import { ItemsGridWithFilter } from "@/components/item";
 import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
@@ -93,7 +93,7 @@ export default function OutfitFormSheet() {
         <Activity mode={outfitStep == "ITEMS" ? "visible" : "hidden"}>
           <ItemsSelectContext.Provider value={{ selectedIds: OutfitItemsIds, action: handleSelectItem }}>
             <div className="space-y-5 px-6">
-              <ClothingItemGridWithFilter />
+              <ItemsGridWithFilter />
             </div>
           </ItemsSelectContext.Provider>
         </Activity>

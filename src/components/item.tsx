@@ -11,10 +11,9 @@ import ItemDetailsSheet from "@/dialogs/item-sheet";
 import useItemsSelect from "@/hooks/use-items-select";
 
 /**
- * -------------------------------------------------
  * Single item component
  */
-function ClothingItem({ item, selected, action }: { item: Item, selected?: boolean, action: (item: Item) => void }) {
+function ItemCard({ item, selected, action }: { item: Item, selected?: boolean, action: (item: Item) => void }) {
   return (
     <div
       className="overflow-clip flex flex-col justify-between relative"
@@ -34,10 +33,9 @@ function ClothingItem({ item, selected, action }: { item: Item, selected?: boole
   );
 }
 /**
- * -----------------------------------------------
  * The full grid
  */
-export default function ClothingItemsGrid({ items }: { items: Item[] }) {
+export default function ItemsGrid({ items }: { items: Item[] }) {
 
   const sheet = useSheet();
   const itemsSelect = useItemsSelect();
@@ -51,7 +49,7 @@ export default function ClothingItemsGrid({ items }: { items: Item[] }) {
       <div className="grid grid-cols-3 gap-2">
         {
           items.map(item => (
-            <ClothingItem
+            <ItemCard
               selected={itemsSelect?.selectedIds.includes(item.id)}
               key={item.id}
               item={item}
@@ -64,10 +62,19 @@ export default function ClothingItemsGrid({ items }: { items: Item[] }) {
   )
 }
 /**
- * -------------------------------------------------
+ * Just the skeleton
+ */
+export function ItemsGridSkeleton() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
+    </div>
+  )
+}
+/**
  * The grid plus filters on top
  */
-export function ClothingItemGridWithFilter() {
+export function ItemsGridWithFilter() {
 
   const items = useItems();
   const itemsSelect = useItemsSelect();
@@ -85,18 +92,7 @@ export function ClothingItemGridWithFilter() {
         {allItemsTypes.map(type => <Badge className="uppercase p-4" key={type} variant={fitlerItemType === type ? 'default' : 'outline'} onClick={() => setFilterItemType(type)}>{type}</Badge>)}
       </div>
 
-      <ClothingItemsGrid items={items.items.filter(i => !fitlerItemType || fitlerItemType == i.type)} />
+      <ItemsGrid items={items.items.filter(i => !fitlerItemType || fitlerItemType == i.type)} />
     </>
-  )
-}
-/**
- * --------------------------------------------------
- * Just the skeleton
- */
-export function ClothingItemGridSkeleton() {
-  return (
-    <div className="grid grid-cols-3 gap-2">
-      {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
-    </div>
   )
 }
