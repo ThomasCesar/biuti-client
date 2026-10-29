@@ -14,6 +14,7 @@ import NavigationLayout from "@/layouts/navigation-layout";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ProtectedRouteLayout } from "@/layouts/protected-route-layout";
 import OutfitsPage from "@/pages/outfits";
+import OutfitsProvider from "@/contexts/outfits-provider";
 
 const router = createBrowserRouter([
   {
@@ -38,9 +39,11 @@ const router = createBrowserRouter([
         path: "/",
         element: (
           <ItemsProvider>
-            <SheetProvider>
-              <ProtectedRouteLayout />
-            </SheetProvider>
+            <OutfitsProvider>
+              <SheetProvider>
+                <ProtectedRouteLayout />
+              </SheetProvider>
+            </OutfitsProvider>
           </ItemsProvider>
         ),
         children: [

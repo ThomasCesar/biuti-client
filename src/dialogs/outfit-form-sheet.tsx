@@ -16,6 +16,7 @@ import { ClothingItemGridWithFilter } from "@/components/clothing-item";
 import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
+import { useOutfits } from "@/hooks/use-outfits";
 
 type OutfitStep = 'ITEMS' | 'PHOTO' | 'INFO';
 
@@ -38,6 +39,8 @@ export default function OutfitFormSheet() {
   const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>("Other");
   const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>([])
   const [isLoading, setIsLoading] = useState(false);
+
+  const outfits = useOutfits();
 
   const sheet = useSheet();
 
@@ -66,7 +69,11 @@ export default function OutfitFormSheet() {
       userId: defaultUser.id,
       image: outfitImage
     }
-    await createOutfit(newItem);
+    const outfitCreated = await createOutfit(newItem);
+    outfits.dispatch({
+      action: "ADD",
+      outfits: [outfitCreated]
+    })
     sheet.closeSheet();
   }
 
