@@ -2,46 +2,36 @@ import type { Item } from "@/lib/items";
 import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
 import { Activity, useState } from "react";
-import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
+import { BASE_URL_UPLOADS } from "@/lib/api";
+import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useOutfits } from "@/hooks/use-outfits";
 import { Textarea } from "@/components/ui/textarea";
+import { OutfitItemsImages } from "@/components/outfit";
+import { ItemsGridWithFilter } from "@/components/item";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
-import { ClothingItemGridWithFilter } from "@/components/clothing-item";
-import { allOutfitCategories, createOutfit, type Outfit, type OutfitForCreate } from "@/lib/outfits";
 import { ArrowLeft, ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
-import { useOutfits } from "@/hooks/use-outfits";
+import { allOutfitCategories, createOutfit, updateOutfit, type Outfit, type OutfitForCreate, type OutfitForUpdate } from "@/lib/outfits";
 
-type OutfitStep = 'ITEMS' | 'PHOTO' | 'INFO';
+export default function OutfitFormSheet({ outfit }: { outfit?: Outfit }) {
 
-function OutfitItemsList({ OutfitItemsIds }: { OutfitItemsIds: Item["id"][] }) {
-  const items = useItems();
-  return (
-    <div className="flex items-center justify-end flex-nowrap overflow-auto scrollbar-none gap-2">
-      {items.items.filter(i => OutfitItemsIds.includes(i.id)).map(i => <img src={`${BASE_URL_UPLOADS}${i.image}`} key={i.id} className="w-10 h-10 rounded-sm object-cover" />)}
-    </div>
-  )
-}
-
-export default function OutfitFormSheet() {
-
-  const [outfitStep, setOutfitStep] = useState<OutfitStep>("ITEMS");
-  const [outfitName, setOutfitName] = useState<Outfit['name']>("");
+  const [selectingItems, setSelectingItems] = useState(true);
+  const [outfitName, setOutfitName] = useState<Outfit['name']>(outfit?.name || '');
+  const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>(outfit?.description || '');
+  const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>(outfit?.category || "Other");
+  const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>(outfit ? outfit.items.map(o => o.id) : [])
   const [outfitImage, setOutfitImage] = useState<File | undefined>(undefined);
-  const [outfitImageUrl, setOutfitImageUrl] = useState<string | undefined>(undefined);
-  const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>("");
-  const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>("Other");
-  const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>([])
   const [isLoading, setIsLoading] = useState(false);
 
+  const items = useItems();
   const outfits = useOutfits();
-
   const sheet = useSheet();
 
   const handleSelectItem = (item: Item) => {
@@ -50,31 +40,82 @@ export default function OutfitFormSheet() {
       setOutfitItemsIds([...OutfitItemsIds, ...[item.id]])
   }
 
-  const handleLoadOutfitImage = (image: File) => {
-    setOutfitImage(image);
-    setOutfitImageUrl(URL.createObjectURL(image));
-  }
-
   const handleSaveOutfit = async () => {
     setIsLoading(true);
-    if (!outfitImage) {
+
+    // edit existing outfit
+
+    if (outfit) {
+      let partialOutfit: OutfitForUpdate = {
+        name: outfitName,
+        description: outfitDescription,
+        category: outfitCategory,
+        itemsIds: OutfitItemsIds
+      }
+      if (outfitImage) {
+        partialOutfit.image = outfitImage;
+      }
+      const result = await updateOutfit(outfit.id, partialOutfit);
+      if (!result.success) {
+        toast.add({
+          type: "error",
+          description: result.error
+        })
+        setIsLoading(false);
+        return;
+      }
+      outfits.dispatch({
+        action: "UPDATE",
+        id: outfit.id,
+        outfit: result.result
+      });
       setIsLoading(false);
-      return;
+      toast.add({
+        type: "success",
+        description: "Outfit Modified"
+      })
+      sheet.closeSheet();
     }
-    const newItem: OutfitForCreate = {
-      name: outfitName,
-      description: outfitDescription,
-      category: outfitCategory,
-      itemsIds: OutfitItemsIds,
-      userId: defaultUser.id,
-      image: outfitImage
+
+    // add new outfit
+
+    else {
+      if (!outfitImage) {
+        toast.add({
+          type: "error",
+          description: "Choose an image bitch"
+        })
+        setIsLoading(false);
+        return;
+      }
+      const newItem: OutfitForCreate = {
+        name: outfitName,
+        description: outfitDescription,
+        category: outfitCategory,
+        itemsIds: OutfitItemsIds,
+        userId: defaultUser.id,
+        image: outfitImage
+      }
+      const result = await createOutfit(newItem);
+      setIsLoading(false);
+      if (!result.success) {
+        toast.add({
+          type: "error",
+          description: result.error
+        })
+      }
+      else {
+        outfits.dispatch({
+          action: "ADD",
+          outfits: [result.result]
+        })
+        toast.add({
+          type: "success",
+          description: "Outfit created"
+        })
+        sheet.closeSheet();
+      }
     }
-    const outfitCreated = await createOutfit(newItem);
-    outfits.dispatch({
-      action: "ADD",
-      outfits: [outfitCreated]
-    })
-    sheet.closeSheet();
   }
 
   return (
@@ -83,57 +124,45 @@ export default function OutfitFormSheet() {
       {/* HEADER */}
 
       <SheetHeader>
-        <span className="text-2xl">New outfit</span>
+        <span className="text-2xl">{outfit ? <>Edit outfit</> : <>New outfit</>}</span>
       </SheetHeader>
 
       <SheetContentBody>
 
         {/* -- STEP 1 : SELECT ALL THE CLOTHING ITEMS  -- */}
 
-        <Activity mode={outfitStep == "ITEMS" ? "visible" : "hidden"}>
+        <Activity mode={selectingItems ? "visible" : "hidden"}>
           <ItemsSelectContext.Provider value={{ selectedIds: OutfitItemsIds, action: handleSelectItem }}>
             <div className="space-y-5 px-6">
-              <ClothingItemGridWithFilter />
+              <ItemsGridWithFilter />
             </div>
           </ItemsSelectContext.Provider>
         </Activity>
 
-        {/* -- STEP 2 : PHOTO & CATEGORY   -- */}
+        {/* -- STEP 2 : PHOTO, CATEGORY, SAVE -- */}
 
-        <Activity mode={outfitStep == "PHOTO" ? "visible" : "hidden"}>
+        <Activity mode={!selectingItems ? "visible" : "hidden"}>
+
           <div className="flex flex-col gap-6 justify-start px-6">
-            <p>Upload a photo :</p>
             <div className="flex flex-col gap-2">
-              <UploadImageZone onLoadFile={handleLoadOutfitImage} />
-              <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
-            </div>
-            <p>Specify category :</p>
-            <div className="flex items-center flex-wrap gap-2">
-              {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-5 uppercase" key={cat} onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
-            </div>
-            <p>Generate your outfit with AI :</p>
-            <Button variant={"default"} size={"lg"} className="w-full">GENERATE <Sparkle /></Button>
-          </div>
-        </Activity>
-
-        {/* -- STEP 3 : NAME IT, GENERATE, SAVE  -- */}
-
-        <Activity mode={outfitStep == "INFO" ? "visible" : "hidden"}>
-          <div className="flex flex-col gap-5 justify-start px-6">
-            <div className="flex flex-col gap-2 w-full">
-              <img src={outfitImageUrl} className="w-full h-[45vh] object-cover rounded-sm" />
-              <OutfitItemsList OutfitItemsIds={OutfitItemsIds} />
+              <div className="flex justify-between">
+                <OutfitItemsImages items={items.items.filter(i => OutfitItemsIds.includes(i.id))} />
+                <Button variant={"default"} size={"sm"}>Generate<Sparkle /></Button>
+              </div>
+              <UploadImageZone initialImageUrl={outfit?.image ? `${BASE_URL_UPLOADS}${outfit.image}` : undefined} onLoadFile={setOutfitImage} />
             </div>
             <Table>
               <TableBody>
+                <FieldRow title="Category">
+                  <div className="flex items-center justify-end flex-wrap gap-1">
+                    {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-3 uppercase" key={cat} onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
+                  </div>
+                </FieldRow>
                 <FieldRow title="Title">
                   <Input placeholder="Title of item" value={outfitName} onChange={e => setOutfitName(e.target.value)} />
                 </FieldRow>
                 <FieldRow title="Description">
                   <Textarea placeholder="Type your message here." value={outfitDescription} onChange={e => setOutfitDescription(e.target.value)} />
-                </FieldRow>
-                <FieldRow title="Category">
-                  <Badge variant={"outline"} className="p-4 uppercase">{outfitCategory}</Badge>
                 </FieldRow>
               </TableBody>
             </Table>
@@ -145,22 +174,30 @@ export default function OutfitFormSheet() {
       {/* FOOTER */}
 
       <SheetFooter className="flex-row">
-        <Button variant={"outline"} className="flex-1" onClick={() => outfitStep == "ITEMS" ? sheet.closeSheet() : setOutfitStep(outfitStep == "PHOTO" ? "ITEMS" : "PHOTO")} >
-          {outfitStep == "ITEMS" ? <>CANCEL</> : <><ArrowLeft /> BACK </>}
-        </Button>
         {
-          outfitStep !== "INFO" ?
-            <Button variant={"outline"} className="flex-1" onClick={() => setOutfitStep(outfitStep === "ITEMS" ? "PHOTO" : "INFO")} >
-              NEXT<ArrowRight />
-            </Button> :
-            <Button
-              variant={"default"}
-              className="flex-1"
-              onClick={handleSaveOutfit}
-              disabled={isLoading}
-            >
-              {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>SAVE OUTFIT<CheckCircle /></>}
-            </Button>
+          selectingItems ?
+            <>
+              <Button variant={"outline"} className="flex-1" onClick={() => sheet.closeSheet()} >
+                CANCEL
+              </Button>
+              <Button variant={"outline"} className="flex-1" onClick={() => setSelectingItems(false)} >
+                NEXT<ArrowRight />
+              </Button>
+            </>
+            :
+            <>
+              <Button variant={"outline"} className="flex-1" onClick={() => setSelectingItems(true)} >
+                <ArrowLeft /> BACK
+              </Button>
+              <Button
+                variant={"default"}
+                className="flex-1"
+                onClick={handleSaveOutfit}
+                disabled={isLoading}
+              >
+                {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>SAVE OUTFIT<CheckCircle /></>}
+              </Button>
+            </>
         }
       </SheetFooter>
     </>

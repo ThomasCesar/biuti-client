@@ -7,14 +7,13 @@ import { CheckCircle2 } from "lucide-react";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import type { Item, ItemType } from "@/lib/items";
-import ItemDetailsSheet from "@/dialogs/item-sheet";
+import ItemSheet from "@/dialogs/item-sheet";
 import useItemsSelect from "@/hooks/use-items-select";
 
 /**
- * -------------------------------------------------
  * Single item component
  */
-function ClothingItem({ item, selected, action }: { item: Item, selected?: boolean, action: (item: Item) => void }) {
+function ItemCard({ item, selected, action }: { item: Item, selected?: boolean, action: (item: Item) => void }) {
   return (
     <div
       className="overflow-clip flex flex-col justify-between relative"
@@ -34,10 +33,9 @@ function ClothingItem({ item, selected, action }: { item: Item, selected?: boole
   );
 }
 /**
- * -----------------------------------------------
  * The full grid
  */
-export default function ClothingItemsGrid({ items }: { items: Item[] }) {
+export default function ItemsGrid({ items }: { items: Item[] }) {
 
   const sheet = useSheet();
   const itemsSelect = useItemsSelect();
@@ -50,24 +48,34 @@ export default function ClothingItemsGrid({ items }: { items: Item[] }) {
       <p className="">{items.length} clothing item(s)</p>
       <div className="grid grid-cols-3 gap-2">
         {
-          items.map(item => (
-            <ClothingItem
-              selected={itemsSelect?.selectedIds.includes(item.id)}
-              key={item.id}
-              item={item}
-              action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemDetailsSheet item={item} />)}
-            />
-          ))
+          items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime())
+            .map(item => (
+              <ItemCard
+                selected={itemsSelect?.selectedIds.includes(item.id)}
+                key={item.id}
+                item={item}
+                action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemSheet item={item} />)}
+              />
+            ))
         }
       </div>
     </>
   )
 }
 /**
- * -------------------------------------------------
+ * Just the skeleton
+ */
+export function ItemsGridSkeleton() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
+    </div>
+  )
+}
+/**
  * The grid plus filters on top
  */
-export function ClothingItemGridWithFilter() {
+export function ItemsGridWithFilter() {
 
   const items = useItems();
   const itemsSelect = useItemsSelect();
@@ -85,18 +93,7 @@ export function ClothingItemGridWithFilter() {
         {allItemsTypes.map(type => <Badge className="uppercase p-4" key={type} variant={fitlerItemType === type ? 'default' : 'outline'} onClick={() => setFilterItemType(type)}>{type}</Badge>)}
       </div>
 
-      <ClothingItemsGrid items={items.items.filter(i => !fitlerItemType || fitlerItemType == i.type)} />
+      <ItemsGrid items={items.items.filter(i => !fitlerItemType || fitlerItemType == i.type)} />
     </>
-  )
-}
-/**
- * --------------------------------------------------
- * Just the skeleton
- */
-export function ClothingItemGridSkeleton() {
-  return (
-    <div className="grid grid-cols-3 gap-2">
-      {Array.from(Array(10).keys()).map(i => <Skeleton key={i} className="h-40" />)}
-    </div>
   )
 }

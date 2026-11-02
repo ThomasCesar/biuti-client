@@ -4,6 +4,7 @@ import useItems from "@/hooks/use-items";
 import { defaultUser } from "@/lib/users";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
+import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { defaultBrandId } from "@/lib/brands";
 import FieldRow from "@/components/field-row";
@@ -19,8 +20,8 @@ import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaul
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
   const [itemName, setItemName] = useState(item?.name || '');
-  const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemDescription, setItemDescription] = useState(item?.description || '');
+  const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
   const [itemMaterial, setItemMaterial] = useState<ItemMaterial>(item?.material || defaultItemMaterial);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,12 +46,25 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       if (itemImage) {
         partialItem.image = itemImage;
       }
-      const itemUpdated = await updateItem(item.id, partialItem);
-      items.dispatch({
-        action: "UPDATE",
-        id: item.id,
-        item: itemUpdated
-      })
+      const result = await updateItem(item.id, partialItem);
+      setIsLoading(false);
+      if (!result.success) {
+        toast.add({
+          type: "error",
+          description: result.error
+        })
+      }
+      else {
+        toast.add({
+          type: "success",
+          description: "Item updated"
+        })
+        items.dispatch({
+          action: "UPDATE",
+          id: item.id,
+          item: result.result
+        })
+      }
     }
     else {
 
@@ -58,6 +72,10 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
 
       if (!itemImage) {
         setIsLoading(false);
+        toast.add({
+          type: "error",
+          description: "Choose an image bitch."
+        })
         return;
       }
       const newItem: ItemForCreate = {
@@ -69,11 +87,24 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         brandId: defaultBrandId,
         image: itemImage
       }
-      const itemCreated = await createItem(newItem)
-      items.dispatch({
-        action: "ADD",
-        items: [itemCreated]
-      })
+      const result = await createItem(newItem);
+      setIsLoading(false);
+      if (!result.success) {
+        toast.add({
+          type: "error",
+          description: result.error
+        })
+      }
+      else {
+        toast.add({
+          type: "success",
+          description: "Item created"
+        })
+        items.dispatch({
+          action: "ADD",
+          items: [result.result]
+        })
+      }
     }
     sheet.closeSheet();
   }

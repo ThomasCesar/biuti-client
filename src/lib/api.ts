@@ -4,6 +4,10 @@
 export const BASE_URL_API = `http://localhost:3000/`;
 export const BASE_URL_UPLOADS = `${BASE_URL_API}uploads/`;
 /**
+ * the type returned by an API call
+ */
+type ApiResponse<T> = { success: true, result: T } | { success: false, error: string }
+/**
  * ---------------------------------------------
  * Build a formData from an object
  */
@@ -25,7 +29,7 @@ export function buildFormData(theObject: Record<string, string | File | number |
  * ---------------------------------------------
  * Make a get request
  */
-export async function apiGETRequest<T>(uri: string): Promise<T> {
+export async function apiGETRequest<T>(uri: string): Promise<ApiResponse<T>> {
   const response = await fetch(`${BASE_URL_API}${uri}`);
   return await response.json();
 }
@@ -33,7 +37,7 @@ export async function apiGETRequest<T>(uri: string): Promise<T> {
  * --------------------------------------------
  * make a post request
  */
-export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T> {
+export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<ApiResponse<T>> {
   const response = await fetch(
     `${BASE_URL_API}${uri}`,
     {
@@ -48,7 +52,7 @@ export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<T>
  * ---------------------------------------------
  * make a patch request
  */
-export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<T> {
+export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<ApiResponse<T>> {
   const response = await fetch(
     `${BASE_URL_API}${uri}`,
     {
@@ -62,7 +66,7 @@ export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<T
  * ---------------------------------------------
  * Make a delete request
  */
-export async function apiDELETERequest(uri: string): Promise<boolean> {
+export async function apiDELETERequest(uri: string): Promise<ApiResponse<boolean>> {
   const response = await fetch(`${BASE_URL_API}${uri}`, { method: 'DELETE' });
   return await response.json();
 }

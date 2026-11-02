@@ -2,7 +2,6 @@ import { useEffect, useReducer, useState } from "react";
 import { getOutfits, type Outfit } from "@/lib/outfits";
 import { OutfitsContext, type OutfitsReducerProps } from "./outfits-context";
 
-
 function outfitsReducer(outfits: Outfit[], payload: OutfitsReducerProps): Outfit[] {
   switch (payload.action) {
     case "ADD":
@@ -25,7 +24,8 @@ export default function OutfitsProvider({ children }: { children: React.ReactNod
 
   useEffect(() => {
     const loadOutfits = async () => {
-      const allOutfits = await getOutfits();
+      const result = await getOutfits();
+      const allOutfits = (result.success ? result.result : []);
       dispatch({ action: "LOAD", outfits: allOutfits });
       setLoaded(true);
     };

@@ -1,6 +1,6 @@
 import { wait } from "./utils";
 import type { Item } from "./items";
-import { apiGETRequest, apiPOSTRequest, buildFormData } from "./api";
+import { apiDELETERequest, apiGETRequest, apiPATCHRequest, apiPOSTRequest, buildFormData } from "./api";
 import type { User } from "./users";
 
 /**
@@ -22,18 +22,33 @@ export type Outfit = {
 }
 
 export type OutfitForCreate = Omit<Outfit, "id" | "image" | "items" | "user" | "createdAt"> & { itemsIds: Item["id"][] } & { image: File }
+export type OutfitForUpdate = Partial<OutfitForCreate>
 
 /**
  * Get all outfits
  */
-export async function getOutfits(): Promise<Outfit[]> {
+export async function getOutfits() {
   await wait();
-  return await apiGETRequest(`outfits`)
+  return await apiGETRequest<Outfit[]>(`outfits`)
 }
 /**
  * Create a new outfit
  */
-export async function createOutfit(newOutfit: OutfitForCreate): Promise<Outfit> {
+export async function createOutfit(newOutfit: OutfitForCreate) {
   await wait();
   return await apiPOSTRequest<Outfit>('outfits', buildFormData(newOutfit));
+}
+/**
+ * Partial update of an outfit
+ */
+export async function updateOutfit(outfitId: Outfit['id'], partialOutfit: OutfitForUpdate) {
+  await wait();
+  return await apiPATCHRequest<Outfit>(`outfits/${outfitId}`, buildFormData(partialOutfit))
+}
+/**
+ * Delete an outfit
+ */
+export async function deleteOutfit(outfitId: Outfit["id"]) {
+  await wait();
+  return await apiDELETERequest(`outfits/${outfitId}`);
 }

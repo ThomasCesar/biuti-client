@@ -2,7 +2,6 @@ import { getItems, type Item } from "@/lib/items";
 import { useEffect, useReducer, useState } from "react";
 import { ItemsContext, type ItemsReducerProps } from "@/contexts/items-context";
 
-
 function itemsReducer(items: Item[], payload: ItemsReducerProps) {
   switch (payload.action) {
     case 'LOAD':
@@ -25,8 +24,8 @@ export function ItemsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const getAllItems = async () => {
-      const items = await getItems();
-      items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime());
+      const result = await getItems();
+      const items = (result.success ? result.result : []);
       dispatchItems({ action: "LOAD", items: items });
       setIsLoaded(true);
     }
