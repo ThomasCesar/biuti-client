@@ -1,6 +1,6 @@
 import { wait } from "./utils";
 import type { Item } from "./items";
-import { apiDELETERequest, apiGETRequest, apiPOSTRequest, buildFormData } from "./api";
+import { apiDELETERequest, apiGETRequest, apiPATCHRequest, apiPOSTRequest, buildFormData } from "./api";
 import type { User } from "./users";
 
 /**
@@ -22,6 +22,7 @@ export type Outfit = {
 }
 
 export type OutfitForCreate = Omit<Outfit, "id" | "image" | "items" | "user" | "createdAt"> & { itemsIds: Item["id"][] } & { image: File }
+export type OutfitForUpdate = Partial<OutfitForCreate>
 
 /**
  * Get all outfits
@@ -36,6 +37,13 @@ export async function getOutfits() {
 export async function createOutfit(newOutfit: OutfitForCreate) {
   await wait();
   return await apiPOSTRequest<Outfit>('outfits', buildFormData(newOutfit));
+}
+/**
+ * Partial update of an outfit
+ */
+export async function updateOutfit(outfitId: Outfit['id'], partialOutfit: OutfitForUpdate) {
+  await wait();
+  return await apiPATCHRequest<Outfit>(`outfits/${outfitId}`, buildFormData(partialOutfit))
 }
 /**
  * Delete an outfit

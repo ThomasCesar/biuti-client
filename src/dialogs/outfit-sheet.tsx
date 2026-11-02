@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
 import { Button } from "@/components/ui/button";
 import { useOutfits } from "@/hooks/use-outfits";
+import OutfitFormSheet from "./outfit-form-sheet";
 import { Table, TableBody } from "@/components/ui/table";
 import { deleteOutfit, type Outfit } from "@/lib/outfits";
 import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
 import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
-import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
 
@@ -51,11 +53,12 @@ export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
         <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl">
           <div className="flex justify-between items-center mb-5">
             <p className="text-2xl ">{outfit.name}</p>
-            <Button className="z-10" variant={"outline"}>EDIT OUTFIT<Edit /></Button>
+            <Button className="z-10" variant={"outline"} onClick={() => sheet.openSheet(<OutfitFormSheet outfit={outfit} />)} >EDIT OUTFIT<Edit /></Button>
           </div>
           <Table>
             <TableBody>
               <FieldRow title="Type"> {outfit.category} </FieldRow>
+              <FieldRow title="Category"><Badge variant={"outline"}>{outfit.category}</Badge></FieldRow>
               <FieldRow title="Description"><p className="text-wrap">{outfit.description}</p></FieldRow>
               <FieldRow title="Created"> {new Date(outfit.createdAt).toLocaleDateString()} </FieldRow>
             </TableBody>

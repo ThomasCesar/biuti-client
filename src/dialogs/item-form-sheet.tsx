@@ -20,8 +20,8 @@ import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaul
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
   const [itemName, setItemName] = useState(item?.name || '');
-  const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemDescription, setItemDescription] = useState(item?.description || '');
+  const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
   const [itemMaterial, setItemMaterial] = useState<ItemMaterial>(item?.material || defaultItemMaterial);
   const [isLoading, setIsLoading] = useState(false);

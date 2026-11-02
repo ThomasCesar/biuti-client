@@ -48,14 +48,15 @@ export default function ItemsGrid({ items }: { items: Item[] }) {
       <p className="">{items.length} clothing item(s)</p>
       <div className="grid grid-cols-3 gap-2">
         {
-          items.map(item => (
-            <ItemCard
-              selected={itemsSelect?.selectedIds.includes(item.id)}
-              key={item.id}
-              item={item}
-              action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemSheet item={item} />)}
-            />
-          ))
+          items.sort((i1, i2) => new Date(i2.createdAt).getTime() - new Date(i1.createdAt).getTime())
+            .map(item => (
+              <ItemCard
+                selected={itemsSelect?.selectedIds.includes(item.id)}
+                key={item.id}
+                item={item}
+                action={itemsSelect ? () => itemsSelect.action(item) : () => sheet.openSheet(<ItemSheet item={item} />)}
+              />
+            ))
         }
       </div>
     </>
