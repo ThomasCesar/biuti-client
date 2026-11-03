@@ -1,8 +1,9 @@
-import React, { useState } from "react";
 import Header from "@/components/header";
+import { apiGETRequest } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "@/lib/auth";
 import { Link, useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader, LogOut, SquarePen } from "lucide-react";
@@ -30,6 +31,16 @@ export default function AccountPage() {
     await signOut();
     navigate('/sign-in');
   }
+
+  // --> test for checking session state
+
+  // useEffect(() => {
+  //   const checkMe = async () => {
+  //     const res = await apiGETRequest<unknown>('users/me');
+  //     console.log(res);
+  //   }
+  //   checkMe();
+  // }, [])
 
   return (
     <div className="space-y-5">

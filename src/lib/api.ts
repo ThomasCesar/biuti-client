@@ -30,7 +30,10 @@ export function buildFormData(theObject: Record<string, string | File | number |
  * Make a get request
  */
 export async function apiGETRequest<T>(uri: string): Promise<ApiResponse<T>> {
-  const response = await fetch(`${BASE_URL_API}${uri}`);
+  const response = await fetch(
+    `${BASE_URL_API}${uri}`,
+    { credentials: 'include' }
+  );
   return await response.json();
 }
 /**
@@ -42,7 +45,8 @@ export async function apiPOSTRequest<T>(uri: string, body: FormData): Promise<Ap
     `${BASE_URL_API}${uri}`,
     {
       method: 'POST',
-      body: body
+      body: body,
+      credentials: "include"
     }
   );
   return await response.json();
@@ -57,7 +61,8 @@ export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<A
     `${BASE_URL_API}${uri}`,
     {
       method: 'PATCH',
-      body: body
+      body: body,
+      credentials: "include"
     }
   );
   return await response.json();
@@ -67,6 +72,9 @@ export async function apiPATCHRequest<T>(uri: string, body: FormData): Promise<A
  * Make a delete request
  */
 export async function apiDELETERequest(uri: string): Promise<ApiResponse<boolean>> {
-  const response = await fetch(`${BASE_URL_API}${uri}`, { method: 'DELETE' });
+  const response = await fetch(
+    `${BASE_URL_API}${uri}`,
+    { method: 'DELETE', credentials: "include" }
+  );
   return await response.json();
 }
