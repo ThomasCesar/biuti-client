@@ -1,5 +1,4 @@
 import HomePage from "@/pages/home";
-import { Toaster } from "./ui/toast";
 import SignInPage from "@/pages/sign-in";
 import SignUpPage from "@/pages/sign-up";
 import WelcomePage from "@/pages/welcome";
@@ -9,17 +8,13 @@ import WardrobePage from "@/pages/wardrobe";
 import NotFoundPage from "@/pages/not-found";
 import ColorimetryPage from "@/pages/colorimetry";
 import MobileLayout from "@/layouts/mobile-layout";
-import { AuthProvider } from "@/contexts/auth-provider";
-import OutfitsProvider from "@/contexts/outfits-provider";
-import { SheetProvider } from "@/contexts/sheet-provider";
-import { ItemsProvider } from "@/contexts/items-provider";
 import NavigationLayout from "@/layouts/navigation-layout";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ProtectedRouteLayout } from "@/layouts/protected-route-layout";
 
 const router = createBrowserRouter([
   {
-    element: <AuthProvider />,
+    element: <MobileLayout />,
     errorElement: <NotFoundPage />,
     children: [
 
@@ -39,14 +34,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <ItemsProvider>
-            <OutfitsProvider>
-              <SheetProvider>
-                <ProtectedRouteLayout />
-              </SheetProvider>
-              <Toaster />
-            </OutfitsProvider>
-          </ItemsProvider>
+          <ProtectedRouteLayout />
         ),
         children: [
           {
@@ -96,9 +84,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return (
-    <MobileLayout>
-      <RouterProvider router={router} />
-    </MobileLayout>
-  )
+  return <RouterProvider router={router} />
 }

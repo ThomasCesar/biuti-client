@@ -1,12 +1,12 @@
-import { Link } from "react-router";
 import React, { useState } from "react";
-import { Loader, LogOut, SquarePen } from "lucide-react";
 import Header from "@/components/header";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "@/lib/auth";
+import { Link, useNavigate } from "react-router";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader, LogOut, SquarePen } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function SettingsCard({ children }: { children: React.ReactNode }) {
   return (
@@ -22,11 +22,13 @@ export default function AccountPage() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, logout } = useAuth();
+  const session = useSession();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     setIsLoading(true);
-    await logout();
+    await signOut();
+    navigate('/sign-in');
   }
 
   return (
@@ -44,8 +46,8 @@ export default function AccountPage() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="space-y-0 flex-1 overflow-hidden">
-              <p className="w-full overflow-hidden text-ellipsis text-nowrap">{user?.name}</p>
-              <p className="text-muted-foreground w-full overflow-hidden text-ellipsis text-nowrap">{user?.mail}</p>
+              <p className="w-full overflow-hidden text-ellipsis text-nowrap">{session.data?.user.name}</p>
+              <p className="text-muted-foreground w-full overflow-hidden text-ellipsis text-nowrap">{session.data?.user.email}</p>
             </div>
           </div>
           <Link to={'/'}>
