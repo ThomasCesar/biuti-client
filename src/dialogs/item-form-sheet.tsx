@@ -6,10 +6,10 @@ import useBrands from "@/hooks/use-brands";
 import Selector from "@/components/selector";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
-import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import FieldRow from "@/components/field-row";
 import { Button } from "@/components/ui/button";
+import ErrorAlert from "@/components/error-alert";
 import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import SelectBadges from "@/components/select-badges";
@@ -28,6 +28,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
   const [itemMaterial, setItemMaterial] = useState<ItemMaterial | undefined>(item?.material || undefined);
   const [itemBrandId, setItemBrandId] = useState<Brand['id'] | undefined>(item?.brandId || undefined)
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // --- hooks
   const items = useItems();
@@ -51,19 +52,17 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
 
     setIsLoading(true);
 
+    // --> verification
+
     if (!itemMaterial || !itemBrandId) {
-      toast.add({
-        type: "error",
-        description: "Missing info !"
-      })
+      setError('Missing info !');
       setIsLoading(false);
       return;
     }
 
+    // --> update the item (PATCH) if it exists
+
     if (item) {
-
-      // --> update the item (PATCH) if it exists
-
       let partialItem: ItemForUpdate = {
         name: itemName,
         description: itemDescription,
@@ -76,16 +75,9 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       const result = await updateItem(item.id, partialItem);
       setIsLoading(false);
       if (!result.success) {
-        toast.add({
-          type: "error",
-          description: result.error
-        })
+        setError(result.error)
       }
       else {
-        toast.add({
-          type: "success",
-          description: "Item updated"
-        })
         items.dispatch({
           action: "UPDATE",
           id: item.id,
@@ -93,16 +85,13 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         })
       }
     }
+
+    // --> or create a new item (POST)
+
     else {
-
-      // --> or create a new item (POST)
-
       if (!itemImage) {
         setIsLoading(false);
-        toast.add({
-          type: "error",
-          description: "Missing stuff."
-        })
+        setError("Missing stuff image !")
         return;
       }
       const newItem: ItemForCreate = {
@@ -116,16 +105,9 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       const result = await createItem(newItem);
       setIsLoading(false);
       if (!result.success) {
-        toast.add({
-          type: "error",
-          description: result.error
-        })
+        setError(result.error);
       }
       else {
-        toast.add({
-          type: "success",
-          description: "Item created"
-        })
         items.dispatch({
           action: "ADD",
           items: [result.result]
@@ -135,11 +117,14 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
     sheet.closeSheet();
   }
 
+  // --- component
+
   return (
     <>
       <SheetHeaderWithClose title={item ? `Edit item` : `Add item`} />
       <SheetContentBody>
         <div className="flex flex-col gap-5 justify-start px-6">
+          <ErrorAlert error={error} />
           <UploadImageZone initialImageUrl={item?.image ? `${BASE_URL_UPLOADS}${item.image}` : undefined} onLoadFile={setItemImage} />
           <Table>
             <TableBody>

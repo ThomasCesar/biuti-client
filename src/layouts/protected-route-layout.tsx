@@ -1,11 +1,10 @@
 import { Loader } from "lucide-react";
 import { useSession } from "@/lib/auth";
-import { Toaster } from "@/components/ui/toast";
 import { useNavigate, Outlet } from "react-router";
+import BrandsProvider from "@/contexts/brands-provider";
 import { ItemsProvider } from "@/contexts/items-provider";
 import OutfitsProvider from "@/contexts/outfits-provider";
 import { SheetProvider } from "@/contexts/sheet-provider";
-import BrandsProvider from "@/contexts/brands-provider";
 
 export const ProtectedRouteLayout = () => {
 
@@ -35,7 +34,6 @@ export const ProtectedRouteLayout = () => {
           <SheetProvider>
             <Outlet />
           </SheetProvider>
-          <Toaster />
         </OutfitsProvider>
       </ItemsProvider>
     </BrandsProvider>

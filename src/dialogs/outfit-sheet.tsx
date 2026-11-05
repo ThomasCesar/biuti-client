@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
-import { toast } from "@/components/ui/toast";
+import { Badge } from "@/components/ui/badge";
 import FieldRow from "@/components/field-row";
 import { Button } from "@/components/ui/button";
 import { useOutfits } from "@/hooks/use-outfits";
+import ErrorAlert from "@/components/error-alert";
 import OutfitFormSheet from "./outfit-form-sheet";
+import { OutfitItems } from "@/components/outfit";
 import { Table, TableBody } from "@/components/ui/table";
 import { deleteOutfit, type Outfit } from "@/lib/outfits";
-import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
+import { ChevronLeft, Edit, Heart, Loader, Trash } from "lucide-react";
 import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
 
 export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<null | string>(null);
 
   const outfits = useOutfits();
   const sheet = useSheet();
@@ -24,19 +26,16 @@ export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
     const result = await deleteOutfit(outfit.id);
     setIsLoading(false);
     if (!result.success) {
-      toast.add({
-        type: "error",
-        description: result.error
-      })
+      setError(result.error)
     }
     else {
       outfits.dispatch({ action: "DELETE", id: outfit.id })
-      toast.add({
-        type: "success",
-        description: "Outfit deleted"
-      })
       sheet.closeSheet();
     }
+  }
+
+  const handleEditOutfit = (goToItemsSelection?: boolean) => {
+    sheet.openSheet(<OutfitFormSheet outfit={outfit} openItemsSelection={goToItemsSelection} />)
   }
 
   return (
@@ -50,29 +49,32 @@ export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
           }
         />
         <img className="w-full h-[50vh] object-cover -z-10 relative" src={`${BASE_URL_UPLOADS}${outfit.image}`} />
-        <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl">
+        <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl flex flex-col gap-3">
           <div className="flex justify-between items-center mb-5">
             <p className="text-2xl ">{outfit.name}</p>
-            <Button className="z-10" variant={"outline"} onClick={() => sheet.openSheet(<OutfitFormSheet outfit={outfit} />)} >EDIT OUTFIT<Edit /></Button>
+            <Button size={"icon"} variant={"ghost"}>
+              <Heart />
+            </Button>
           </div>
           <Table>
             <TableBody>
+              <FieldRow title="Items">
+                <OutfitItems items={outfit.items} onClick={() => handleEditOutfit(true)} />
+              </FieldRow>
               <FieldRow title="Type"> {outfit.category} </FieldRow>
               <FieldRow title="Category"><Badge variant={"outline"}>{outfit.category}</Badge></FieldRow>
               <FieldRow title="Description"><p className="text-wrap">{outfit.description}</p></FieldRow>
               <FieldRow title="Created"> {new Date(outfit.createdAt).toLocaleDateString()} </FieldRow>
             </TableBody>
           </Table>
+          <div className="flex justify-end gap-1">
+            <Button variant={"outline"} onClick={() => handleEditOutfit(false)} >EDIT<Edit /></Button>
+            <Button variant={"destructive"} onClick={handleDeleteOutfit} disabled={isLoading} > {isLoading ? <Loader className="animate-spin" /> : <>DELETE<Trash /></>}</Button>
+          </div>
+          <ErrorAlert error={error} />
         </div>
       </SheetContentBody>
       <SheetFooterWithClose>
-        <Button
-          variant={"destructive"}
-          onClick={handleDeleteOutfit}
-          disabled={isLoading}
-        >
-          {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>DELETE OUTFIT<Trash /></>}
-        </Button>
       </SheetFooterWithClose>
     </>
   );

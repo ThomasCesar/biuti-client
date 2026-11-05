@@ -4,10 +4,10 @@ import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import ItemFormSheet from "./item-form-sheet";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
 import BrandLogo from "@/components/brand-logo";
 import { Button } from "@/components/ui/button";
+import ErrorAlert from "@/components/error-alert";
 import { deleteItem, type Item } from "@/lib/items";
 import { Table, TableBody } from "@/components/ui/table";
 import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
@@ -16,6 +16,7 @@ import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components
 export default function ItemSheet({ item }: { item: Item }) {
 
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const items = useItems();
   const sheet = useSheet();
@@ -25,17 +26,10 @@ export default function ItemSheet({ item }: { item: Item }) {
     const result = await deleteItem(item.id);
     setIsLoading(false);
     if (!result.success) {
-      toast.add({
-        type: "error",
-        description: result.error
-      })
+      setError(result.error);
     }
     else {
       items.dispatch({ action: "DELETE", id: item.id });
-      toast.add({
-        type: "success",
-        description: "Item deleted"
-      })
       sheet.closeSheet();
     }
   }
@@ -51,7 +45,7 @@ export default function ItemSheet({ item }: { item: Item }) {
           }
         />
         <img className="w-full h-[40vh] object-cover -z-10 relative" src={`${BASE_URL_UPLOADS}${item.image}`} />
-        <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl">
+        <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl flex flex-col gap-3">
           <div className="flex justify-between items-center mb-5">
             <p className="text-2xl ">{item.name}</p>
             <Button className="z-10" variant={"outline"} onClick={() => sheet.openSheet(<ItemFormSheet item={item} />)}>EDIT ITEM<Edit /></Button>
@@ -65,6 +59,7 @@ export default function ItemSheet({ item }: { item: Item }) {
               <FieldRow title="Created"> {new Date(item.createdAt).toLocaleDateString()} </FieldRow>
             </TableBody>
           </Table>
+          <ErrorAlert error={error} />
         </div>
       </SheetContentBody>
       <SheetFooterWithClose>

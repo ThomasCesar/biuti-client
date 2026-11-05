@@ -7,11 +7,11 @@ import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useOutfits } from "@/hooks/use-outfits";
 import OutfitSheet from "@/dialogs/outfit-sheet";
 
-export function OutfitItemsImages({ items }: { items: Item[] }) {
+export function OutfitItems({ items, ...props }: React.ComponentProps<"div"> & { items: Item[] }) {
   return (
-    <div className="flex items-center justify-end gap-1 p-1">
-      {items.slice(0, 2).map((i, idx) => <img src={`${BASE_URL_UPLOADS}${i.image}`} key={idx} className="w-8 h-8 rounded-sm" />)}
-      {items.length > 2 && <span className="w-8 h-8 rounded-sm bg-background text-center leading-8 text-sm text-muted-foreground">+{items.length - 2}</span>}
+    <div className="flex items-center justify-end gap-1" {...props}>
+      {items.slice(0, 2).map((i, idx) => <img src={`${BASE_URL_UPLOADS}${i.image}`} key={idx} className="w-8 h-8  rounded-sm" />)}
+      {items.length > 2 && <span className="w-8 h-8 rounded-sm bg-background border-2 text-center leading-8 text-sm text-muted-foreground box-content">+{items.length - 2}</span>}
     </div>
   )
 }
@@ -26,7 +26,7 @@ function OutfitCard({ outfit }: { outfit: Outfit }) {
       <div className="relative w-full h-50 rounded-sm overflow-clip">
         <img src={`${BASE_URL_UPLOADS}${outfit.image}`} className="w-full h-full object-cover" />
         <div className="absolute bottom-0 w-full">
-          <OutfitItemsImages items={outfit.items} />
+          <OutfitItems items={outfit.items} />
         </div>
       </div>
       <div className="space-y-0 py-1">

@@ -119,8 +119,8 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
 function SheetFooterWithClose({ closeText, children }: { closeText?: string, children?: React.ReactNode }) {
   return (
     <SheetFooter>
-      {children}
       <SheetClose render={<Button variant="outline">{closeText || `CLOSE`}</Button>} />
+      {children}
     </SheetFooter>
   )
 }
