@@ -1,16 +1,15 @@
 import type { Item } from "@/lib/items";
 import useItems from "@/hooks/use-items";
-import { defaultUser } from "@/lib/users";
 import { Activity, useState } from "react";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { toast } from "@/components/ui/toast";
 import FieldRow from "@/components/field-row";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useOutfits } from "@/hooks/use-outfits";
 import { Textarea } from "@/components/ui/textarea";
+import SelectBadges from "@/components/select-badges";
 import { OutfitItemsImages } from "@/components/outfit";
 import { ItemsGridWithFilter } from "@/components/item";
 import { Table, TableBody } from "@/components/ui/table";
@@ -93,7 +92,6 @@ export default function OutfitFormSheet({ outfit }: { outfit?: Outfit }) {
         description: outfitDescription,
         category: outfitCategory,
         itemsIds: OutfitItemsIds,
-        userId: defaultUser.id,
         image: outfitImage
       }
       const result = await createOutfit(newItem);
@@ -154,9 +152,7 @@ export default function OutfitFormSheet({ outfit }: { outfit?: Outfit }) {
             <Table>
               <TableBody>
                 <FieldRow title="Category">
-                  <div className="flex items-center justify-end flex-wrap gap-1">
-                    {allOutfitCategories.map(cat => <Badge variant={outfitCategory === cat ? "default" : "outline"} className="p-3 uppercase" key={cat} onClick={() => setOutfitCategory(cat)}>{cat}</Badge>)}
-                  </div>
+                  <SelectBadges values={allOutfitCategories} valueSelected={outfitCategory} onSelect={setOutfitCategory} />
                 </FieldRow>
                 <FieldRow title="Title">
                   <Input placeholder="Title of item" value={outfitName} onChange={e => setOutfitName(e.target.value)} />

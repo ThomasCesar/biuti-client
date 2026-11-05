@@ -28,7 +28,7 @@ export type Item = {
 export const defaultItemType: ItemType = "Shirt";
 export const defaultItemMaterial: ItemMaterial = "Cotton";
 
-export type ItemForCreate = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'user' | 'createdAt'> & { image: File }
+export type ItemForCreate = Omit<Required<Item>, 'id' | 'image' | 'brand' | 'userId' | 'user' | 'createdAt'> & { image: File }
 export type ItemForUpdate = Partial<ItemForCreate>;
 
 /**

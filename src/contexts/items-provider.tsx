@@ -1,8 +1,8 @@
 import { getItems, type Item } from "@/lib/items";
 import { useEffect, useReducer, useState } from "react";
-import { ItemsContext, type ItemsReducerProps } from "@/contexts/items-context";
+import { ItemsContext, type ItemsDispatcherProps } from "@/contexts/items-context";
 
-function itemsReducer(items: Item[], payload: ItemsReducerProps) {
+function itemsReducer(items: Item[], payload: ItemsDispatcherProps) {
   switch (payload.action) {
     case 'LOAD':
       return payload.items;

@@ -1,7 +1,7 @@
-import type { Item } from "@/lib/items";
 import { createContext } from "react";
+import type { Item } from "@/lib/items";
 
-export type ItemsReducerProps = {
+export type ItemsDispatcherProps = {
   action: 'ADD' | 'LOAD',
   items: Item[]
 } |
@@ -18,7 +18,7 @@ export type ItemsReducerProps = {
 type ItemsContextProps = {
   loaded: boolean,
   items: Item[],
-  dispatch: React.ActionDispatch<[payload: ItemsReducerProps]>
+  dispatch: React.ActionDispatch<[payload: ItemsDispatcherProps]>
 }
 
 export const ItemsContext = createContext<ItemsContextProps | null>(null);

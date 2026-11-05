@@ -1,10 +1,20 @@
+import { apiGETRequest } from "./api";
+import { wait } from "./utils";
+/**
+ * Types n shit
+ */
 export type Brand = {
-  id: number,
+  id: string,
   name: string,
   description: string,
   logo?: string,
   website?: string,
   createdAt: string
 }
-
-export const defaultBrandId = "cmutxukxo00018othbltzmnbk";
+/**
+ * Get all brands
+ */
+export async function getBrands() {
+  await wait();
+  return await apiGETRequest<Brand[]>(`brands`)
+}

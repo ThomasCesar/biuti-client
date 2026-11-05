@@ -21,7 +21,7 @@ export type Outfit = {
   createdAt: string;
 }
 
-export type OutfitForCreate = Omit<Outfit, "id" | "image" | "items" | "user" | "createdAt"> & { itemsIds: Item["id"][] } & { image: File }
+export type OutfitForCreate = Omit<Outfit, "id" | "image" | "items" | "userId" | "user" | "createdAt"> & { itemsIds: Item["id"][] } & { image: File }
 export type OutfitForUpdate = Partial<OutfitForCreate>
 
 /**

@@ -5,6 +5,7 @@ import { useNavigate, Outlet } from "react-router";
 import { ItemsProvider } from "@/contexts/items-provider";
 import OutfitsProvider from "@/contexts/outfits-provider";
 import { SheetProvider } from "@/contexts/sheet-provider";
+import BrandsProvider from "@/contexts/brands-provider";
 
 export const ProtectedRouteLayout = () => {
 
@@ -28,13 +29,15 @@ export const ProtectedRouteLayout = () => {
   }
 
   return (
-    <ItemsProvider>
-      <OutfitsProvider>
-        <SheetProvider>
-          <Outlet />
-        </SheetProvider>
-        <Toaster />
-      </OutfitsProvider>
-    </ItemsProvider>
+    <BrandsProvider>
+      <ItemsProvider>
+        <OutfitsProvider>
+          <SheetProvider>
+            <Outlet />
+          </SheetProvider>
+          <Toaster />
+        </OutfitsProvider>
+      </ItemsProvider>
+    </BrandsProvider>
   );
 };

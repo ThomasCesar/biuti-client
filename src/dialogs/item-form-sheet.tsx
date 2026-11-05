@@ -1,37 +1,64 @@
 
 import { useState } from "react";
 import useItems from "@/hooks/use-items";
-import { defaultUser } from "@/lib/users";
+import { type Brand } from "@/lib/brands";
+import useBrands from "@/hooks/use-brands";
+import Selector from "@/components/selector";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import { toast } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
-import { defaultBrandId } from "@/lib/brands";
 import FieldRow from "@/components/field-row";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import SelectBadges from "@/components/select-badges";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
-import SelectFieldRow from "@/components/select-field-row";
 import { SheetContentBody, SheetFooterWithClose, SheetHeaderWithClose } from "@/components/ui/sheet";
-import { allItemMaterials, allItemTypes, createItem, defaultItemMaterial, defaultItemType, updateItem, type Item, type ItemForUpdate, type ItemMaterial, type ItemType, type ItemForCreate } from "@/lib/items";
+import { allItemTypes, createItem, defaultItemType, updateItem, type Item, type ItemForUpdate, type ItemMaterial, type ItemType, type ItemForCreate } from "@/lib/items";
 
 export default function ItemFormSheet({ item }: { item?: Item }) {
 
+  // --- states
   const [itemName, setItemName] = useState(item?.name || '');
   const [itemDescription, setItemDescription] = useState(item?.description || '');
   const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
-  const [itemMaterial, setItemMaterial] = useState<ItemMaterial>(item?.material || defaultItemMaterial);
+  const [itemMaterial, setItemMaterial] = useState<ItemMaterial | undefined>(item?.material || undefined);
+  const [itemBrandId, setItemBrandId] = useState<Brand['id'] | undefined>(item?.brandId || undefined)
   const [isLoading, setIsLoading] = useState(false);
 
+  // --- hooks
   const items = useItems();
+  const brands = useBrands();
   const sheet = useSheet();
 
+  // --- selector items
+  const allItemMaterialsForSelect: Record<ItemMaterial, ItemMaterial> = {
+    Cotton: "Cotton",
+    Leather: "Leather",
+    Linen: "Linen",
+    Synthetic: "Synthetic",
+    Wool: "Wool",
+    Mixed: "Mixed"
+  }
+  let allBrandsForSelect: Record<Brand['id'], Brand['name']> = {}
+  brands.brands.forEach((b) => allBrandsForSelect[b.id] = b.name);
+
+  // --- save action
   const handleSaveItem = async () => {
 
     setIsLoading(true);
+
+    if (!itemMaterial || !itemBrandId) {
+      toast.add({
+        type: "error",
+        description: "Missing info !"
+      })
+      setIsLoading(false);
+      return;
+    }
 
     if (item) {
 
@@ -74,7 +101,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         setIsLoading(false);
         toast.add({
           type: "error",
-          description: "Choose an image bitch."
+          description: "Missing stuff."
         })
         return;
       }
@@ -83,8 +110,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
         description: itemDescription,
         material: itemMaterial,
         type: itemType,
-        userId: defaultUser.id,
-        brandId: defaultBrandId,
+        brandId: itemBrandId,
         image: itemImage
       }
       const result = await createItem(newItem);
@@ -124,10 +150,13 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
                 <Textarea placeholder="Type your message here." value={itemDescription} onChange={e => setItemDescription(e.target.value)} />
               </FieldRow>
               <FieldRow title="Type">
-                <SelectFieldRow placeHolder="Select type" value={itemType} options={allItemTypes} onValueChange={setItemType} />
+                <SelectBadges values={allItemTypes} valueSelected={itemType} onSelect={setItemType} />
               </FieldRow>
               <FieldRow title="Material">
-                <SelectFieldRow placeHolder="Select material" value={itemMaterial} options={allItemMaterials} onValueChange={setItemMaterial} />
+                <Selector enumType={allItemMaterialsForSelect} value={itemMaterial} placeholder="Select material" onChange={(selectedMaterial) => setItemMaterial(selectedMaterial)} />
+              </FieldRow>
+              <FieldRow title="Brand">
+                <Selector enumType={allBrandsForSelect} value={itemBrandId} placeholder="Select brand" onChange={(selectedBrandId) => setItemBrandId(selectedBrandId)} />
               </FieldRow>
             </TableBody>
           </Table>
