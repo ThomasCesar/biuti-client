@@ -6,7 +6,7 @@ import type { User } from "./users";
 /**
  * Types and stuff
  */
-export const allOutfitCategories = ['Casual', 'Business', 'Business Casual', 'Sports', 'Other'] as const;
+export const allOutfitCategories = ['Casual', 'Business', 'BusinessCasual', 'Sports', 'Other'] as const;
 export type OutfitCategory = typeof allOutfitCategories[number];
 
 export type Outfit = {

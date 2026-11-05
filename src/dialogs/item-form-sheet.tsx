@@ -1,9 +1,7 @@
 
 import { useState } from "react";
 import useItems from "@/hooks/use-items";
-import { type Brand } from "@/lib/brands";
 import useBrands from "@/hooks/use-brands";
-import Selector from "@/components/selector";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import { useSheet } from "@/hooks/use-sheet";
 import { Input } from "@/components/ui/input";
@@ -12,9 +10,10 @@ import { Button } from "@/components/ui/button";
 import ErrorAlert from "@/components/error-alert";
 import { CheckCircle, Loader } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import SelectBadges from "@/components/select-badges";
 import { Table, TableBody } from "@/components/ui/table";
+import BadgesSelector from "@/components/badges-selector";
 import { UploadImageZone } from "@/components/upload-zone";
+import Selector, { type SelectorOption } from "@/components/selector";
 import { SheetContentBody, SheetFooterWithClose, SheetHeaderWithClose } from "@/components/ui/sheet";
 import { allItemTypes, createItem, defaultItemType, updateItem, type Item, type ItemForUpdate, type ItemMaterial, type ItemType, type ItemForCreate } from "@/lib/items";
 
@@ -25,8 +24,8 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
   const [itemDescription, setItemDescription] = useState(item?.description || '');
   const [itemImage, setItemImage] = useState<File | undefined>(undefined);
   const [itemType, setItemType] = useState<ItemType>(item?.type || defaultItemType);
-  const [itemMaterial, setItemMaterial] = useState<ItemMaterial | undefined>(item?.material || undefined);
-  const [itemBrandId, setItemBrandId] = useState<Brand['id'] | undefined>(item?.brandId || undefined)
+  const [itemMaterial, setItemMaterial] = useState<string | null>(item?.material || null);
+  const [itemBrandId, setItemBrandId] = useState<string | null>(item?.brandId || null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,16 +35,15 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
   const sheet = useSheet();
 
   // --- selector items
-  const allItemMaterialsForSelect: Record<ItemMaterial, ItemMaterial> = {
-    Cotton: "Cotton",
-    Leather: "Leather",
-    Linen: "Linen",
-    Synthetic: "Synthetic",
-    Wool: "Wool",
-    Mixed: "Mixed"
-  }
-  let allBrandsForSelect: Record<Brand['id'], Brand['name']> = {}
-  brands.brands.forEach((b) => allBrandsForSelect[b.id] = b.name);
+  const allItemMaterialsForSelector: SelectorOption[] = [
+    { value: "Cotton", label: "Cotton" },
+    { value: "Leather", label: "Leather" },
+    { value: "Linen", label: "Linen" },
+    { value: "Mixed", label: "Mixed" },
+    { value: "Synthetic", label: "Synthetic" },
+    { value: "Wool", label: "Wool" }
+  ]
+  const allBrandsForSelect: SelectorOption[] = brands.brands.map((b) => { return { value: b.id, label: b.name } });
 
   // --- save action
   const handleSaveItem = async () => {
@@ -66,7 +64,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       let partialItem: ItemForUpdate = {
         name: itemName,
         description: itemDescription,
-        material: itemMaterial,
+        material: itemMaterial as ItemMaterial,
         type: itemType
       };
       if (itemImage) {
@@ -97,7 +95,7 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
       const newItem: ItemForCreate = {
         name: itemName,
         description: itemDescription,
-        material: itemMaterial,
+        material: itemMaterial as ItemMaterial,
         type: itemType,
         brandId: itemBrandId,
         image: itemImage
@@ -135,13 +133,17 @@ export default function ItemFormSheet({ item }: { item?: Item }) {
                 <Textarea placeholder="Type your message here." value={itemDescription} onChange={e => setItemDescription(e.target.value)} />
               </FieldRow>
               <FieldRow title="Type">
-                <SelectBadges values={allItemTypes} valueSelected={itemType} onSelect={setItemType} />
+                <BadgesSelector values={allItemTypes} valueSelected={itemType} onSelect={setItemType} />
               </FieldRow>
-              <FieldRow title="Material">
-                <Selector enumType={allItemMaterialsForSelect} value={itemMaterial} placeholder="Select material" onChange={(selectedMaterial) => setItemMaterial(selectedMaterial)} />
+              <FieldRow title="Material"  >
+                <div className="flex justify-end">
+                  <Selector options={allItemMaterialsForSelector} onValueChange={setItemMaterial} value={itemMaterial} />
+                </div>
               </FieldRow>
               <FieldRow title="Brand">
-                <Selector enumType={allBrandsForSelect} value={itemBrandId} placeholder="Select brand" onChange={(selectedBrandId) => setItemBrandId(selectedBrandId)} />
+                <div className="flex justify-end">
+                  <Selector options={allBrandsForSelect} onValueChange={setItemBrandId} value={itemBrandId} />
+                </div>
               </FieldRow>
             </TableBody>
           </Table>

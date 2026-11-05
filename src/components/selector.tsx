@@ -1,36 +1,30 @@
-import React from "react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
-interface SelectorProps<T> {
-  enumType: T; // The TypeScript enum
-  onChange: (selectedKey: T[keyof T]) => void; // Callback when an option is selected
-  value?: T[keyof T]; // Selected value, based on the enum type
-  placeholder?: string; // Optional placeholder text
+export type SelectorOption = {
+  value: string | null,
+  label: string
 }
 
-const Selector = <T extends Record<string, string>>({
-  enumType,
-  onChange,
-  value,
-  placeholder = "Select an option",
-}: SelectorProps<T>) => {
+type SelectorProps = {
+  options: SelectorOption[],
+  value: string | null,
+  onValueChange: (v: string | null) => void
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(e.target.value as T[keyof T]); // Pass the selected value to the parent
-  };
-
+export default function Selector({ options, value, onValueChange }: SelectorProps) {
   return (
-    <select value={value} onChange={handleChange} className="select-class">
-      <option value="">{placeholder}</option>
-      {
-        Object.entries(enumType)
-          .map(([value, label]) => ({ value, label }))
-          .map((option) => (
-            <option key={option.value} value={option.value}>
+    <Select items={options} defaultValue={value} onValueChange={onValueChange}>
+      <SelectTrigger className="w-full max-w-48" >
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value} >
               {option.label}
-            </option>
+            </SelectItem>
           ))}
-    </select>
-  );
+        </SelectGroup>
+      </SelectContent>
+    </Select>)
 };
-
-export default Selector;

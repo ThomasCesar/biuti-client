@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import ErrorAlert from "@/components/error-alert";
 import { deleteItem, type Item } from "@/lib/items";
 import { Table, TableBody } from "@/components/ui/table";
-import { ChevronLeft, Edit, Loader, Trash } from "lucide-react";
+import { ChevronLeft, Edit, Heart, Loader, Trash } from "lucide-react";
 import { SheetClose, SheetContentBody, SheetFooterWithClose } from "@/components/ui/sheet";
 
 export default function ItemSheet({ item }: { item: Item }) {
@@ -34,6 +34,10 @@ export default function ItemSheet({ item }: { item: Item }) {
     }
   }
 
+  const handleEditItem = () => {
+    sheet.openSheet(<ItemFormSheet item={item} />)
+  }
+
   return (
     <>
       <SheetContentBody>
@@ -48,7 +52,9 @@ export default function ItemSheet({ item }: { item: Item }) {
         <div className="p-6 bg-popover z-10 -mt-6 relative rounded-t-4xl flex flex-col gap-3">
           <div className="flex justify-between items-center mb-5">
             <p className="text-2xl ">{item.name}</p>
-            <Button className="z-10" variant={"outline"} onClick={() => sheet.openSheet(<ItemFormSheet item={item} />)}>EDIT ITEM<Edit /></Button>
+            <Button size={"icon"} variant={"ghost"}>
+              <Heart />
+            </Button>
           </div>
           <Table>
             <TableBody>
@@ -59,18 +65,14 @@ export default function ItemSheet({ item }: { item: Item }) {
               <FieldRow title="Created"> {new Date(item.createdAt).toLocaleDateString()} </FieldRow>
             </TableBody>
           </Table>
+          <div className="flex justify-end gap-1">
+            <Button variant={"outline"} onClick={handleEditItem} >EDIT<Edit /></Button>
+            <Button variant={"destructive"} onClick={handleDeleteItem} disabled={isLoading} > {isLoading ? <Loader className="animate-spin" /> : <>DELETE<Trash /></>}</Button>
+          </div>
           <ErrorAlert error={error} />
         </div>
       </SheetContentBody>
-      <SheetFooterWithClose>
-        <Button
-          variant={"destructive"}
-          onClick={handleDeleteItem}
-          disabled={isLoading}
-        >
-          {isLoading ? <>LOADING <Loader className="animate-spin" /></> : <>DELETE ITEM<Trash /></>}
-        </Button>
-      </SheetFooterWithClose>
+      <SheetFooterWithClose />
     </>
   )
 

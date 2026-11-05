@@ -1,6 +1,7 @@
 import type { Item } from "@/lib/items";
 import useItems from "@/hooks/use-items";
 import { Activity, useState } from "react";
+import Selector from "@/components/selector";
 import { useSheet } from "@/hooks/use-sheet";
 import { BASE_URL_UPLOADS } from "@/lib/api";
 import FieldRow from "@/components/field-row";
@@ -10,36 +11,46 @@ import { useOutfits } from "@/hooks/use-outfits";
 import ErrorAlert from "@/components/error-alert";
 import { OutfitItems } from "@/components/outfit";
 import { Textarea } from "@/components/ui/textarea";
-import SelectBadges from "@/components/select-badges";
 import { ItemsGridWithFilter } from "@/components/item";
 import { Table, TableBody } from "@/components/ui/table";
 import { UploadImageZone } from "@/components/upload-zone";
 import { ItemsSelectContext } from "@/contexts/items-select-context";
 import { ArrowRight, CheckCircle, Loader, Sparkle } from "lucide-react";
 import { SheetContentBody, SheetFooter, SheetHeader } from "@/components/ui/sheet";
-import { allOutfitCategories, createOutfit, updateOutfit, type Outfit, type OutfitForCreate, type OutfitForUpdate } from "@/lib/outfits";
+import { createOutfit, updateOutfit, type Outfit, type OutfitCategory, type OutfitForCreate, type OutfitForUpdate } from "@/lib/outfits";
 
 export default function OutfitFormSheet({ outfit, openItemsSelection }: { outfit?: Outfit, openItemsSelection?: boolean }) {
 
+  // --- states
   const [selectingItems, setSelectingItems] = useState(openItemsSelection ? true : (!outfit ? true : false));
   const [outfitName, setOutfitName] = useState<Outfit['name']>(outfit?.name || '');
   const [outfitDescription, setOutfitDescription] = useState<Outfit['description']>(outfit?.description || '');
-  const [outfitCategory, setOutfitCategory] = useState<Outfit['category']>(outfit?.category || "Other");
+  const [outfitCategory, setOutfitCategory] = useState<string | null>(outfit?.category || null);
   const [OutfitItemsIds, setOutfitItemsIds] = useState<Item["id"][]>(outfit ? outfit.items.map(o => o.id) : [])
   const [outfitImage, setOutfitImage] = useState<File | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
+  // --- hooks
   const items = useItems();
   const outfits = useOutfits();
   const sheet = useSheet();
 
+  // --- selector data
+  const allOutfitCategoriesForSelector: { value: OutfitCategory, label: string }[] = [
+    { value: "BusinessCasual", label: "Business Casual" },
+    { value: "Business", label: "Business" },
+    { value: "Casual", label: "Casual" },
+    { value: "Sports", label: "Sports" },
+    { value: "Other", label: "Other" }
+  ];
+
+  // --- actions
   const handleSelectItem = (item: Item) => {
     OutfitItemsIds.includes(item.id) ?
       setOutfitItemsIds(OutfitItemsIds.filter(itemId => itemId !== item.id)) :
       setOutfitItemsIds([...OutfitItemsIds, ...[item.id]])
   }
-
   const handleSaveOutfit = async () => {
     setIsLoading(true);
 
@@ -49,7 +60,7 @@ export default function OutfitFormSheet({ outfit, openItemsSelection }: { outfit
       let partialOutfit: OutfitForUpdate = {
         name: outfitName,
         description: outfitDescription,
-        category: outfitCategory,
+        category: outfitCategory as OutfitCategory,
         itemsIds: OutfitItemsIds
       }
       if (outfitImage) {
@@ -81,7 +92,7 @@ export default function OutfitFormSheet({ outfit, openItemsSelection }: { outfit
       const newItem: OutfitForCreate = {
         name: outfitName,
         description: outfitDescription,
-        category: outfitCategory,
+        category: outfitCategory as OutfitCategory,
         itemsIds: OutfitItemsIds,
         image: outfitImage
       }
@@ -100,6 +111,7 @@ export default function OutfitFormSheet({ outfit, openItemsSelection }: { outfit
     }
   }
 
+  // --- component
   return (
     <>
 
@@ -135,11 +147,13 @@ export default function OutfitFormSheet({ outfit, openItemsSelection }: { outfit
             </div>
             <Table>
               <TableBody>
-                <FieldRow title="Category">
-                  <SelectBadges values={allOutfitCategories} valueSelected={outfitCategory} onSelect={setOutfitCategory} />
-                </FieldRow>
                 <FieldRow title="Title">
                   <Input placeholder="Title of item" value={outfitName} onChange={e => setOutfitName(e.target.value)} />
+                </FieldRow>
+                <FieldRow title="Category">
+                  <div className="flex justify-end">
+                    <Selector options={allOutfitCategoriesForSelector} onValueChange={setOutfitCategory} value={outfitCategory} />
+                  </div>
                 </FieldRow>
                 <FieldRow title="Description">
                   <Textarea placeholder="Type your message here." value={outfitDescription} onChange={e => setOutfitDescription(e.target.value)} />

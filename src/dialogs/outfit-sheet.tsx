@@ -61,7 +61,6 @@ export default function OutfitSheet({ outfit }: { outfit: Outfit }) {
               <FieldRow title="Items">
                 <OutfitItems items={outfit.items} onClick={() => handleEditOutfit(true)} />
               </FieldRow>
-              <FieldRow title="Type"> {outfit.category} </FieldRow>
               <FieldRow title="Category"><Badge variant={"outline"}>{outfit.category}</Badge></FieldRow>
               <FieldRow title="Description"><p className="text-wrap">{outfit.description}</p></FieldRow>
               <FieldRow title="Created"> {new Date(outfit.createdAt).toLocaleDateString()} </FieldRow>
